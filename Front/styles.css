@@ -101,3 +101,10 @@ header .user-icons a img {
     height: 30px;
     margin-left: 15px;
 }
+
+main {
+    flex: 1;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
