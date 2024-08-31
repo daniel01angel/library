@@ -11,7 +11,6 @@ import java.util.List;
 @Repository
 public class BookRepositoy implements IBookRepository {
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -33,8 +32,9 @@ public class BookRepositoy implements IBookRepository {
     }
 
     @Override
-    public int buyBook(Book book) {
-        return 0;
+    public int buyBook(int bookId, int quantity) {
+        String SQL = "UPDATE Books SET Stock = Stock - ? WHERE BookID = ? AND Stock >= ?";
+        return jdbcTemplate.update(SQL, quantity, bookId, quantity);
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BookService implements IBookService {
@@ -25,9 +26,28 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public int buyBook(Book book) {
-        // Lógica para comprar un libro (pendiente de implementación)
-        return 0;
+    public void buyBooks(Map<Integer, Integer> booksToBuy) {
+        for (Map.Entry<Integer, Integer> entry : booksToBuy.entrySet()) {
+            int bookId = entry.getKey();
+            int quantity = entry.getValue();
+
+            // Validación: Asegurarse de que la cantidad sea mayor que 0
+            if (quantity <= 0) {
+                throw new IllegalArgumentException("The quantity for book ID " + bookId + " must be greater than 0.");
+            }
+
+            // Verificar que haya suficiente stock antes de comprar
+            List<Book> books = iBookRepository.getBook(bookId, null, null);
+            if (books.isEmpty() || books.get(0).getStock() < quantity) {
+                throw new RuntimeException("Not enough stock for book with ID: " + bookId);
+            }
+
+            // Realizar la compra
+            int rowsUpdated = iBookRepository.buyBook(bookId, quantity);
+            if (rowsUpdated == 0) {
+                throw new RuntimeException("Failed to buy book with ID: " + bookId);
+            }
+        }
     }
 
     @Override
