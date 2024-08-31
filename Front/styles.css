@@ -1,4 +1,4 @@
-/* Import modern font "Poppins" */
+/* Importa la fuente moderna "Poppins" */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
 html, body {
@@ -88,6 +88,7 @@ header nav ul li a i {
     margin-right: 8px;
 }
 
+/* Bordes y sombra */
 header nav ul li a {
     background-color: rgba(210, 105, 30, 0.1);
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -109,6 +110,7 @@ main {
     box-sizing: border-box;
 }
 
+/* Estilos para la galería de libros destacados */
 .featured-books {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -186,6 +188,7 @@ main {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
+/* Estilos para la lista de libros */
 .book-list {
     display: flex;
     justify-content: space-between;
@@ -204,7 +207,7 @@ main {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
-    padding-bottom: 50px; /* Add space for button */
+    padding-bottom: 50px; /* Añadir espacio para el botón */
 }
 
 .book-item img {
@@ -222,7 +225,7 @@ main {
     color: #ff4500;
     font-size: 18px;
     font-weight: bold;
-    margin-bottom: 10px; /* Add bottom margin */
+    margin-bottom: 10px; /* Añadir margen inferior */
     display: block;
 }
 
@@ -239,7 +242,7 @@ main {
     color: #d2691e;
 }
 
-/* Add to cart button */
+/* Botón de agregar al carrito */
 .book-item .add-to-cart {
     display: none;
     position: absolute;
@@ -266,14 +269,24 @@ footer {
     box-sizing: border-box;
 }
 
+/* Botón back to top of the page*/
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f3e2cd;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 footer .back-to-top {
     text-decoration: none;
-    color: #333; /* Dark text color for good contrast */
+    color: #333; /* Color de texto oscuro para buen contraste */
     font-weight: bold;
-    background-color: #b8860b; /* Golden brown */
+    background-color: #b8860b; /* Marrón dorado */
     padding: 12px 25px;
-    border-radius: 25px; /* Rounder borders */
-    border: 2px solid #8b5a2b; /* Dark brown border for contrast */
+    border-radius: 25px; /* Bordes más redondeados */
+    border: 2px solid #8b5a2b; /* Borde marrón oscuro para contraste */
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -281,17 +294,12 @@ footer .back-to-top {
 }
 
 footer .back-to-top:hover {
-    background-color: #8b5a2b; /* Dark brown on hover */
-    border-color: #704214; /* Change border color to a darker shade */
-    transform: translateY(-5px); /* Slight lift on hover */
+    background-color: #8b5a2b; /* Marrón oscuro al hacer hover */
+    border-color: #704214; /* Cambio de color del borde a un tono más oscuro */
+    transform: translateY(-3px);
 }
 
 footer .back-to-top i {
-    font-size: 18px; /* Slightly larger icon */
-}
-
-*, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+    font-size: 16px;
+    color: #fff; /* Ícono blanco para buen contraste */
 }
