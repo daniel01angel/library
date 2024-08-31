@@ -289,3 +289,9 @@ footer .back-to-top:hover {
 footer .back-to-top i {
     font-size: 18px; /* Slightly larger icon */
 }
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
