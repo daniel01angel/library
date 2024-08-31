@@ -257,3 +257,35 @@ main {
 .book-item:hover .add-to-cart {
     display: block;
 }
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f3e2cd;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+footer .back-to-top {
+    text-decoration: none;
+    color: #333; /* Dark text color for good contrast */
+    font-weight: bold;
+    background-color: #b8860b; /* Golden brown */
+    padding: 12px 25px;
+    border-radius: 25px; /* Rounder borders */
+    border: 2px solid #8b5a2b; /* Dark brown border for contrast */
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+
+footer .back-to-top:hover {
+    background-color: #8b5a2b; /* Dark brown on hover */
+    border-color: #704214; /* Change border color to a darker shade */
+    transform: translateY(-5px); /* Slight lift on hover */
+}
+
+footer .back-to-top i {
+    font-size: 18px; /* Slightly larger icon */
+}
