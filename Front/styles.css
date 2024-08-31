@@ -156,3 +156,32 @@ main {
     font-size: 18px;
     font-weight: 600;
 }
+
+.sale-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(255, 87, 51, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sale-info h2 {
+    color: #ff5733;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.sale-info p {
+    color: #333;
+    font-weight: 500;
+}
+
+.sale-info:hover {
+    background-color: rgba(255, 87, 51, 0.2);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
