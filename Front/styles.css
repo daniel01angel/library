@@ -87,3 +87,17 @@ header nav ul li a:hover::before {
 header nav ul li a i {
     margin-right: 8px;
 }
+
+header nav ul li a {
+    background-color: rgba(210, 105, 30, 0.1);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header nav ul li:hover {
+    box-shadow: 0 0 15px rgba(210, 105, 30, 0.3);
+}
+
+header .user-icons a img {
+    height: 30px;
+    margin-left: 15px;
+}
