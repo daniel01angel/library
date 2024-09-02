@@ -1,4 +1,4 @@
-package com.library.library.repositoy;
+package com.library.library.repository;
 
 import com.library.library.model.Book;
 

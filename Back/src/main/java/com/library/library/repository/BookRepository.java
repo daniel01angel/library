@@ -1,4 +1,4 @@
-package com.library.library.repositoy;
+package com.library.library.repository;
 
 import com.library.library.model.Book;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class BookRepositoy implements IBookRepository {
+public class BookRepository implements IBookRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
