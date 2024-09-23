@@ -1,9 +1,10 @@
 // src/components/Filters.js
 import React from 'react';
+import './Filters.css'; // Importamos los estilos que acabamos de crear
 
 const Filters = ({ onFilterChange, filters }) => {
     return (
-        <div>
+        <div className="filters-container">
             <label>
                 Género:
                 <select onChange={(e) => onFilterChange('genre', e.target.value)}>
@@ -22,7 +23,7 @@ const Filters = ({ onFilterChange, filters }) => {
                     value={filters.priceRange[1]}
                     onChange={(e) => onFilterChange('priceRange', [0, e.target.value])}
                 />
-                {filters.priceRange[1]}
+                <span className="price-label">${filters.priceRange[1]}</span>
             </label>
 
             <label>

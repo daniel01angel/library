@@ -1,0 +1,89 @@
+/* src/components/Filters.css */
+.filters-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+.filters-container label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 14px;
+    color: #2c3e50;
+    font-weight: 600;
+    margin-right: 20px;
+}
+
+.filters-container select,
+.filters-container input[type="text"],
+.filters-container input[type="date"] {
+    width: 180px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-top: 5px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filters-container select:focus,
+.filters-container input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+    outline: none;
+}
+
+.filters-container input[type="range"] {
+    width: 180px;
+    margin-top: 5px;
+}
+
+.filters-container .price-label {
+    margin-left: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #3498db;
+}
+
+/* Animaciones */
+.filters-container:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.filters-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #3498db;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filters-container input[type="range"]::-webkit-slider-thumb:hover {
+    background-color: #2980b9;
+}
+
+.filters-container input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px;
+    background: #ecf0f1;
+    border-radius: 3px;
+}
+
+@media (max-width: 768px) {
+    .filters-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .filters-container label {
+        margin-bottom: 10px;
+    }
+}
