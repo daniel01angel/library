@@ -38,7 +38,7 @@ function App() {
                         element={<Home searchQuery={searchQuery} onAddToCart={handleAddToCart} />}
                     />
                     <Route path="/book/:isbn" element={<BookDetails />} />
-                    <Route path="/cart" element={<Cart cart={cart} />} />
+                    <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />} />
                 </Routes>
 
                 {/* Mostrar el mensaje de confirmación si existe */}
