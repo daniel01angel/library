@@ -32,6 +32,24 @@
     margin-right: auto; /* Centra la imagen horizontalmente */
 }
 
+/* Estilo para el mensaje de no resultados */
+.no-results {
+    font-size: 24px; /* Tamaño de fuente más grande */
+    color: #e74c3c;  /* Color rojo para destacarlo */
+    text-align: center; /* Centramos el texto */
+    margin-top: 40px; /* Espacio superior para centrarlo mejor */
+    font-weight: bold; /* Texto en negrita para hacerlo más llamativo */
+}
+
+/* Centrar el mensaje en la pantalla */
+.book-list {
+    display: grid;
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-items: center; /* Centra el contenido verticalmente */
+    min-height: 300px; /* Define una altura mínima para asegurar que se centre */
+    flex-direction: column; /* Alinea los elementos en columna */
+}
+
 .book-item h3 {
     font-size: 18px;
     margin: 10px 0;

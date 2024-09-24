@@ -5,22 +5,19 @@ import './Header.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
-const Header = ({ onSearch }) => {
-    const [searchTerm, setSearchTerm] = useState('');  // Controla el término de búsqueda
-    const [isSearchVisible, setSearchVisible] = useState(false);  // Controla la visibilidad de la barra de búsqueda
+const Header = ({ onSearch, cartItemCount }) => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [isSearchVisible, setSearchVisible] = useState(false);
 
-    // Maneja los cambios en el input de búsqueda
     const handleInputChange = (event) => {
         setSearchTerm(event.target.value);
     };
 
-    // Maneja el envío del formulario de búsqueda
     const handleSubmit = (event) => {
         event.preventDefault();
         onSearch(searchTerm);
     };
 
-    // Alterna la visibilidad de la barra de búsqueda
     const toggleSearch = () => {
         setSearchVisible(!isSearchVisible);
     };
@@ -29,10 +26,9 @@ const Header = ({ onSearch }) => {
         <header className="header">
             <div className="header-content">
                 <h1 className="logo">
-                    <Link to="/">Library App</Link> {/* Enlace al inicio */}
+                    <Link to="/">Library App</Link>
                 </h1>
 
-                {/* Barra de navegación */}
                 <nav className="nav">
                     <ul>
                         <li>
@@ -42,18 +38,20 @@ const Header = ({ onSearch }) => {
                             <Link to="/cart">
                                 <FontAwesomeIcon icon={faShoppingCart} />
                                 Carrito
+                                {/* Muestra el número de libros si es mayor a 0 */}
+                                {cartItemCount > 0 && (
+                                    <span className="cart-count">{cartItemCount}</span>
+                                )}
                             </Link>
                         </li>
                     </ul>
                 </nav>
 
-                {/* Contenedor de búsqueda */}
                 <div className="search-container">
                     <button className="search-button" onClick={toggleSearch}>
                         <FontAwesomeIcon icon={faSearch} />
                     </button>
 
-                    {/* Barra de búsqueda expandible */}
                     {isSearchVisible && (
                         <form onSubmit={handleSubmit} className="search-form">
                             <input
@@ -62,7 +60,7 @@ const Header = ({ onSearch }) => {
                                 onChange={handleInputChange}
                                 placeholder="Buscar libros..."
                                 className="search-input"
-                                autoFocus  // Para que el campo reciba el foco al abrirlo
+                                autoFocus
                             />
                             <button type="submit" className="submit-button">
                                 Buscar
