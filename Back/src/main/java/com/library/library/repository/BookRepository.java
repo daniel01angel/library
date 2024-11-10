@@ -42,4 +42,3 @@ public class BookRepository implements IBookRepository {
         return 0;
     }
 }
-
