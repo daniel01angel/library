@@ -12,6 +12,8 @@ public class Book {
     int GenreId;
     int AuthorID;
     int PublisherID;
-    Date PublishDate;
+    float Price;
+    Date PublicationDate;
     int Stock;
+    String Description;
 }
