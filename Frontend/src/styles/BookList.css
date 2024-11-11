@@ -1,0 +1,58 @@
+/* src/styles/BookList.css */
+.book-list {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.book-item {
+    width: 30%;
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.book-item img {
+    height: 120px;
+    transition: transform 0.3s ease;
+}
+
+.book-item p {
+    margin: 10px 0;
+    font-weight: 600;
+}
+
+.book-item span {
+    color: #ff4500;
+    font-size: 18px;
+    font-weight: bold;
+    display: block;
+}
+
+.book-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.book-item .add-to-cart {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #d2691e;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    display: none;
+}
+
+.book-item:hover .add-to-cart {
+    display: block;
+}

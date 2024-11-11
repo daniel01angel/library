@@ -1,0 +1,29 @@
+/* src/styles/Footer.css */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f3e2cd;
+}
+
+footer .back-to-top {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    background-color: #b8860b;
+    padding: 12px 25px;
+    border-radius: 25px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+footer .back-to-top:hover {
+    background-color: #8b5a2b;
+    transform: translateY(-3px);
+}
+
+footer .back-to-top i {
+    font-size: 16px;
+    color: #fff;
+}

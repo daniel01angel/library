@@ -1,0 +1,58 @@
+/* Contenedor de la barra de búsqueda */
+.search-container {
+    position: relative;
+}
+
+/* Barra de búsqueda */
+.search-bar {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 100%;
+    padding: 10px;
+    z-index: 1000;
+}
+
+/* Campo de entrada de búsqueda */
+.search-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Lista de resultados */
+.search-results {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0 0;
+    max-height: 200px; /* Altura máxima para la lista de resultados */
+    overflow-y: auto; /* Permite desplazamiento vertical si hay muchos resultados */
+}
+
+/* Elemento de resultado de búsqueda */
+.search-result-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.search-result-item:hover {
+    background-color: #f0f0f0;
+}
+
+/* Imagen del resultado */
+.result-image {
+    width: 30px;
+    height: 40px;
+    object-fit: cover;
+    margin-right: 10px;
+    border-radius: 4px;
+}
