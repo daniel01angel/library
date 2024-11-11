@@ -1,58 +1,82 @@
-/* src/styles/BookList.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 .book-list {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
     gap: 20px;
+    padding: 40px;
+    justify-content: center;
+    background-color: #f4f4f9;
+    margin-top: 80px;
+    font-family: 'Roboto', sans-serif; /* Fuente moderna */
 }
 
-.book-item {
-    width: 30%;
-    background-color: white;
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.book-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px; /* Bordes más redondeados */
+    width: 200px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra más suave */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
 }
 
-.book-item img {
-    height: 120px;
+.book-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra en hover */
+}
+
+.book-image {
+    width: 150px;
+    height: 220px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 15px;
     transition: transform 0.3s ease;
 }
 
-.book-item p {
-    margin: 10px 0;
-    font-weight: 600;
+.book-card:hover .book-image {
+    transform: scale(1.05); /* Efecto de zoom en la imagen al hacer hover */
 }
 
-.book-item span {
-    color: #ff4500;
+.book-info {
+    text-align: center;
+}
+
+.book-title {
     font-size: 18px;
-    font-weight: bold;
-    display: block;
+    font-weight: 700; /* Título en negrita */
+    color: #333;
+    margin-bottom: 10px;
+    transition: color 0.3s ease;
 }
 
-.book-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+.book-card:hover .book-title {
+    color: #d4a373; /* Color en hover para el título */
 }
 
-.book-item .add-to-cart {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #d2691e;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 600;
-    display: none;
+.book-info p {
+    margin: 4px 0;
+    color: #666;
+    font-size: 14px;
 }
 
-.book-item:hover .add-to-cart {
-    display: block;
+.book-info p strong {
+    color: #333; /* Color más oscuro para títulos */
+    font-weight: 500;
+}
+
+/* Diseño responsivo para pantallas más pequeñas */
+@media (max-width: 600px) {
+    .book-card {
+        width: 100%;
+    }
+
+    .book-image {
+        width: 100%;
+        height: auto;
+    }
 }

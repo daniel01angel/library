@@ -1,5 +1,20 @@
 /* src/App.css */
 
+/* Reinicio de márgenes y rellenos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Configuración para ocupar todo el ancho de la pantalla */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+}
+
 /* Mensaje flotante y moderno */
 .cart-message {
     position: fixed; /* Asegura que esté fijado en la pantalla */
@@ -53,9 +68,10 @@
 }
 /* src/styles/styles.css */
 body {
-    margin-top: 80px; /* Ajusta este valor para dar espacio al encabezado */
+    padding-top: 80px; /* Espacio para el header fijo */
     font-family: 'Poppins', Arial, sans-serif;
     background-color: #f7f7f7;
     color: #333;
 }
+
 

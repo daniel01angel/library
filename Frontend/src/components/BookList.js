@@ -1,34 +1,40 @@
-// src/components/BookList.js
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../api/axios';
+import axios from 'axios';
+import '../styles/BookList.css';
 
-const BookList = () => {
+const BookList = ({ selectedBook, selectedGenre }) => {
     const [books, setBooks] = useState([]);
 
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const response = await axiosInstance.get('/library/book/search');
+                const response = await axios.get('http://localhost:8080/library/book/search?title=');
                 setBooks(response.data);
             } catch (error) {
-                console.error('Error fetching books:', error);
+                console.error("Error fetching books:", error);
             }
         };
-
         fetchBooks();
     }, []);
 
+    const booksToDisplay = selectedBook ? [selectedBook] :
+        selectedGenre ? books.filter(book => book.genreId === selectedGenre) :
+            books;
+
     return (
-        <section className="book-list">
-            {books.map((book) => (
-                <div key={book.isbn} className="book-item">
-                    <img src={book.imageURL} alt={book.title} />
-                    <p>{book.title}</p>
-                    <span>${book.price}</span>
-                    <div className="add-to-cart">Add to Cart</div>
+        <div className="book-list">
+            {booksToDisplay.map((book) => (
+                <div key={book.bookID} className="book-card">
+                    <img src={book.imageURL} alt={book.title} className="book-image" />
+                    <div className="book-info">
+                        <h2 className="book-title">{book.title}</h2>
+                        <p><strong>Publish Date:</strong> {book.publishDate || "N/A"}</p>
+                        <p><strong>ISBN:</strong> {book.isbn}</p>
+                        <p><strong>Stock:</strong> {book.stock}</p>
+                    </div>
                 </div>
             ))}
-        </section>
+        </div>
     );
 };
 
