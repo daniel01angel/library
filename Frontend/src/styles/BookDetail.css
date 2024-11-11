@@ -1,0 +1,239 @@
+/* Variables de colores principales */
+:root {
+    --color-background: #f9f9f9;
+    --color-text: #333333;
+    --color-secondary: #555555;
+    --color-primary: #d4a373;
+    --color-primary-hover: #b08b5b;
+    --color-border: #e0e0e0;
+    --font-family: 'Inter', Arial, sans-serif;
+}
+
+/* Contenedor principal del detalle del libro */
+.book-detail-container {
+    display: flex;
+    gap: 40px;
+    padding: 120px 40px 40px 40px; /* Espaciado optimizado */
+    align-items: flex-start;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-family);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Imagen principal con efecto 3D sutil */
+.main-image {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    max-height: 80vh;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.main-image:hover {
+    transform: scale(1.05);
+}
+
+/* Contenedor de información del libro */
+.book-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Título del libro con tipografía audaz */
+.book-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* Información del autor y precio */
+.book-author,
+.book-price {
+    font-size: 18px;
+    color: var(--color-secondary);
+    margin: 0;
+}
+
+/* Botón de compra con gradiente y microinteracción */
+.buy-button {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+    color: #fff;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    height: 48px; /* Altura consistente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.buy-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Links de detalles y devoluciones con subrayado animado */
+.product-links {
+    color: var(--color-primary);
+    font-size: 14px;
+    text-decoration: none;
+    margin-top: 10px;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.product-links::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: var(--color-primary);
+    left: 0;
+    bottom: -2px;
+    transition: width 0.3s ease;
+}
+
+.product-links:hover {
+    color: var(--color-primary-hover);
+}
+
+.product-links:hover::after {
+    width: 100%;
+}
+
+/* Detalles y características */
+.details-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 40px 40px;
+    font-family: var(--font-family);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    gap: 40px;
+}
+
+.details-section,
+.characteristics-section {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.details-section:last-child,
+.characteristics-section:last-child {
+    margin-right: 0;
+}
+
+/* Título de las secciones */
+.details-section h3,
+.characteristics-section h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--color-text);
+}
+
+/* Texto de detalles y características */
+.details-section p,
+.characteristics-section p {
+    font-size: 16px;
+    color: var(--color-secondary);
+    line-height: 1.8;
+}
+
+/* Ajuste responsivo */
+@media (max-width: 768px) {
+    .book-detail-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 80px 20px 40px 20px;
+    }
+
+    .details-container {
+        flex-direction: column;
+        padding: 40px 20px;
+        gap: 20px;
+    }
+
+    .main-image {
+        max-width: 200px;
+    }
+
+    .book-title {
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .buy-button {
+        width: 100%;
+        text-align: center;
+    }
+
+    .product-links {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .buy-options {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+}
+
+/* Estilos adicionales */
+
+/* Breadcrumb */
+.breadcrumb {
+    font-size: 14px;
+    color: var(--color-secondary);
+    margin-bottom: 20px;
+}
+
+.breadcrumb span {
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.breadcrumb span:hover {
+    color: var(--color-primary-hover);
+}
+
+/* Buy Options */
+.buy-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.buy-options label {
+    font-size: 16px;
+    color: var(--color-secondary);
+}
+
+.quantity-input {
+    width: 60px;
+    padding: 8px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 16px;
+    height: 40px; /* Asegurar altura consistente con el botón */
+}
+
+.buy-options .buy-button {
+    /* Asegurar que el botón tenga la misma altura que el input */
+    height: 40px;
+}

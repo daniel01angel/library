@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header';
 import BookList from './components/BookList';
+import BookDetail from './components/BookDetail'; // Importa el nuevo componente de detalle
 
 const App = () => {
     const [selectedBook, setSelectedBook] = useState(null);
-    const [selectedGenre, setSelectedGenre] = useState(null); // Estado para el género seleccionado
+    const [selectedGenre, setSelectedGenre] = useState(null);
 
     const handleSelectBook = (book) => {
         setSelectedBook(book);
@@ -12,14 +14,17 @@ const App = () => {
 
     const handleSelectGenre = (genreId) => {
         setSelectedGenre(genreId);
-        setSelectedBook(null); // Limpiar el libro seleccionado si cambiamos de género
+        setSelectedBook(null);
     };
 
     return (
-        <div>
+        <Router>
             <Header onSelectBook={handleSelectBook} onSelectGenre={handleSelectGenre} />
-            <BookList selectedBook={selectedBook} selectedGenre={selectedGenre} />
-        </div>
+            <Routes>
+                <Route path="/" element={<BookList selectedGenre={selectedGenre} />} />
+                <Route path="/book/:id" element={<BookDetail />} /> {/* Ruta para el detalle del libro */}
+            </Routes>
+        </Router>
     );
 };
 

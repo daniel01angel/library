@@ -1,13 +1,23 @@
-// src/components/Header.js
-import React, { useState, useEffect } from 'react';
+// src/components/header/Header.js
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import HeaderLogo from './HeaderLogo';
 import GenreButtons from './GenreButtons';
 import SearchBar from './SearchBar';
 import '../../styles/Header/Header.css';
 
-const Header = ({ onSelectBook, onSelectGenre }) => {
+const Header = ({ onSelectGenre }) => {
     const [genres, setGenres] = useState([]);
+    const navigate = useNavigate();
+
+    const handleSelectBook = (book) => {
+        navigate(`/book/${book.bookID}`);
+    };
+
+    const handleSelectGenre = (genreId) => {
+        onSelectGenre(genreId);
+    };
 
     useEffect(() => {
         const fetchGenres = async () => {
@@ -24,8 +34,8 @@ const Header = ({ onSelectBook, onSelectGenre }) => {
     return (
         <header className="header">
             <HeaderLogo />
-            <GenreButtons genres={genres} onSelectGenre={onSelectGenre} />
-            <SearchBar onSelectBook={onSelectBook} />
+            <GenreButtons genres={genres} onSelectGenre={handleSelectGenre} />
+            <SearchBar onSelectBook={handleSelectBook} /> {/* Pasamos onSelectBook */}
         </header>
     );
 };

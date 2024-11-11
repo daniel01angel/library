@@ -1,4 +1,4 @@
-// src/components/SearchBar.js
+// src/components/header/SearchBar.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../styles/Header/SearchBar.css';
@@ -17,6 +17,11 @@ const SearchBar = ({ onSelectBook }) => {
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
+    };
+
+    const handleSelectBookFromResults = (book) => {
+        onSelectBook(book); // Llama a onSelectBook desde los resultados de búsqueda
+        setIsSearchVisible(false); // Oculta la barra de búsqueda
     };
 
     useEffect(() => {
@@ -66,7 +71,7 @@ const SearchBar = ({ onSelectBook }) => {
                             <li
                                 key={book.bookID}
                                 className="search-result-item"
-                                onClick={() => onSelectBook(book)}
+                                onClick={() => handleSelectBookFromResults(book)}
                             >
                                 <img src={book.imageURL} alt={book.title} className="result-image" />
                                 <span>{book.title}</span>
