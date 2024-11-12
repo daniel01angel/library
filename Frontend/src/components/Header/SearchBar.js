@@ -29,7 +29,12 @@ const SearchBar = ({ onSelectBook }) => {
             if (searchTerm) {
                 setIsSearching(true);
                 try {
-                    const response = await axios.get(`http://localhost:8080/library/book/search?title=${searchTerm}`);
+                    // Verifica si el término de búsqueda es un ISBN (10 o 13 dígitos)
+                    const isISBN = /^\d{10}(\d{3})?$/.test(searchTerm);
+
+                    // Define el parámetro de búsqueda según sea ISBN o título
+                    const queryParam = isISBN ? `isbn=${searchTerm}` : `title=${searchTerm}`;
+                    const response = await axios.get(`http://localhost:8080/library/book/search?${queryParam}`);
                     setSearchResults(response.data);
                 } catch (error) {
                     console.error("Error al obtener resultados de búsqueda:", error);
@@ -57,7 +62,7 @@ const SearchBar = ({ onSelectBook }) => {
             <div className={`search-bar ${isSearchVisible ? 'visible' : 'hidden'}`}>
                 <input
                     type="text"
-                    placeholder="Search Books..."
+                    placeholder="Search by title or ISBN..."
                     value={searchTerm}
                     onChange={handleSearchChange}
                     autoFocus
