@@ -237,3 +237,47 @@
     /* Asegurar que el botón tenga la misma altura que el input */
     height: 40px;
 }
+
+/* Author Biography */
+.author-bio {
+    padding: 20px;
+    margin-top: 20px;
+    border-top: 1px solid var(--color-border);
+}
+
+.author-bio h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.author-bio p {
+    font-size: 16px;
+    color: var(--color-secondary);
+    line-height: 1.6;
+}
+
+/* Reviews Section */
+.reviews-section {
+    padding: 20px;
+    margin-top: 20px;
+    border-top: 1px solid var(--color-border);
+}
+
+.reviews-section h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.review-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.review-item p {
+    font-size: 16px;
+    color: var(--color-secondary);
+    line-height: 1.4;
+}
