@@ -1,12 +1,9 @@
-// src/components/Cart.js
 import React, { useContext } from 'react';
 import { CartContext } from '../context/CartContext';
 import '../styles/Cart.css';
 
 const Cart = () => {
     const { cart, clearCart } = useContext(CartContext); // Obtén el carrito del contexto
-
-    console.log("Contenido del carrito en Cart.js:", cart); // Depuración
 
     const total = cart.reduce((acc, book) => acc + book.price, 0);
 
@@ -27,8 +24,11 @@ const Cart = () => {
                         </div>
                     ))}
                     <div className="cart-total">
-                        <h3>Total: ${total}</h3>
-                        <button onClick={clearCart}>Vaciar Carrito</button>
+                        <h3>Total: ${total.toFixed(2)}</h3>
+                        <div className="cart-buttons">
+                            <button className="buy-button" onClick={() => alert('Compra realizada')}>Comprar</button>
+                            <button className="clear-cart-button" onClick={clearCart}>Vaciar Carrito</button>
+                        </div>
                     </div>
                 </div>
             )}

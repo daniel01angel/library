@@ -38,6 +38,7 @@ const App = () => {
                     <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} /> {/* Pasar setIsLoggedIn */}
                     <Route path="/cart" element={<Cart />} />
                     <Route path="*" element={<NotFound />} />
+                    <Route path="/genre/:genreId" element={<BookList />} />
                 </Routes>
             </Router>
         </CartProvider>
