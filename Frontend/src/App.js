@@ -7,6 +7,7 @@ import BookDetail from './components/BookDetail';
 import Login from './components/Login';
 import CartProvider from './context/CartContext'; // Importa el proveedor de contexto del carrito
 import Cart from './components/Cart'; // Asegúrate de que la ruta sea correcta
+import NotFound from './components/NotFound';
 
 const App = () => {
     const [selectedBook, setSelectedBook] = useState(null);
@@ -36,6 +37,7 @@ const App = () => {
                     <Route path="/book/:id" element={<BookDetail />} />
                     <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} /> {/* Pasar setIsLoggedIn */}
                     <Route path="/cart" element={<Cart />} />
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </Router>
         </CartProvider>
