@@ -2,10 +2,12 @@
 import React, { useContext, useState } from 'react';
 import { CartContext } from '../context/CartContext';
 import Notification from './Notification'; // Importa el componente de notificación
+import { useTranslation } from 'react-i18next';
 import '../styles/Cart.css';
 
 const Cart = () => {
     const { cart, clearCart } = useContext(CartContext); // Obtén el carrito del contexto
+    const { t } = useTranslation(); // Inicializa useTranslation
     const [showNotification, setShowNotification] = useState(false); // Estado para controlar la visibilidad de la notificación
 
     const total = cart.reduce((acc, book) => acc + book.price, 0);
@@ -23,9 +25,9 @@ const Cart = () => {
 
     return (
         <div className="cart-container">
-            <h2>Carrito de Compras</h2>
+            <h2>{t('Shopping Cart')}</h2>
             {cart.length === 0 ? (
-                <p>No hay libros en el carrito.</p>
+                <p>{t('No items in the cart.')}</p>
             ) : (
                 <div className="cart-items">
                     {cart.map((book, index) => (
@@ -38,7 +40,7 @@ const Cart = () => {
                         </div>
                     ))}
                     <div className="cart-total">
-                        <h3>Total: ${total.toFixed(2)}</h3>
+                        <h3>{t('Total')}: ${total.toFixed(2)}</h3>
                         <div className="cart-buttons">
                             <button className="buy-button" onClick={handlePurchase}>Comprar</button>
                             <button className="clear-cart-button" onClick={clearCart}>Vaciar Carrito</button>
@@ -49,7 +51,7 @@ const Cart = () => {
 
             {/* Notificación de compra */}
             <Notification
-                message="Compra realizada correctamente"
+                message={t('Purchase successful')}
                 show={showNotification}
                 onClose={() => setShowNotification(false)}
             />
