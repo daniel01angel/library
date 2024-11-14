@@ -5,21 +5,31 @@
     gap: 10px;
 }
 
+/* Estilos para los botones de géneros */
 .genre-button {
-    background-color: #f3e2cd;
-    color: #333;
-    border: 1px solid #b8a694;
+    background: linear-gradient(135deg, #f5e0c3, #e6c29f); /* Beige suave */
+    color: #4e4e4e;
+    padding: 8px 16px;
+    margin: 5px;
+    border: none;
     border-radius: 20px;
-    padding: 5px 15px;
     cursor: pointer;
-    font-size: 14px;
-    font-family: 'Poppins', Arial, sans-serif;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Hover effect */
 .genre-button:hover {
-    background-color: #d4a373;
-    color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #fa709a, #fee140); /* Cambia el color al pasar el ratón */
+    color: #222;
+}
+
+/* Ajuste de texto y espaciado */
+.genre-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(250, 112, 154, 0.4);
 }
