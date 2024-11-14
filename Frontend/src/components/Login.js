@@ -26,10 +26,31 @@ const Login = ({ setIsLoggedIn }) => {
   };
 
   // Manejo del login exitoso con Google
-  const handleGoogleSuccess = (credentialResponse) => {
-    console.log('Google login successful:', credentialResponse);
-    setIsLoggedIn(true);
-    navigate('/');
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const token = credentialResponse.credential; // JWT que devuelve Google
+  
+      // Envía el token al backend
+      const response = await fetch('http://localhost:8080/api/auth/google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Google login successful:', data);
+        setIsLoggedIn(true);
+        navigate('/');
+      } else {
+        setErrorMessage('Failed to authenticate with the server.');
+      }
+    } catch (error) {
+      console.error('Google login failed:', error);
+      setErrorMessage('Google login failed. Please try again.');
+    }
   };
 
   // Manejo del login fallido con Google
