@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
 import Header from './components/Header/Header';
 import BookList from './components/BookList';
-import BookDetail from './components/BookDetail'; // Importa el nuevo componente de detalle
+import BookDetail from './components/BookDetail';
+import Login from './components/Login';
 
 const App = () => {
     const [selectedBook, setSelectedBook] = useState(null);
@@ -22,7 +24,8 @@ const App = () => {
             <Header onSelectBook={handleSelectBook} onSelectGenre={handleSelectGenre} />
             <Routes>
                 <Route path="/" element={<BookList selectedGenre={selectedGenre} />} />
-                <Route path="/book/:id" element={<BookDetail />} /> {/* Ruta para el detalle del libro */}
+                <Route path="/book/:id" element={<BookDetail />} />
+                <Route path="/login" element={<Login />} />
             </Routes>
         </Router>
     );
