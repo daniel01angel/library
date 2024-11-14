@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+// src/components/BookDetail.js
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { CartContext } from '../context/CartContext'; // Importa el contexto del carrito
 import '../styles/BookDetail.css';
 
 const BookDetail = () => {
     const { id } = useParams();
+    const { addToCart } = useContext(CartContext); // Usa el contexto para obtener la función addToCart
     const [book, setBook] = useState(null);
     const [author, setAuthor] = useState(null);
     const [publisher, setPublisher] = useState(null);
@@ -37,6 +40,15 @@ const BookDetail = () => {
         fetchBookDetails();
     }, [id]);
 
+    // Función para manejar la acción de añadir al carrito
+    const handleAddToCart = () => {
+        if (book) {
+            addToCart(book); // Llama a addToCart pasando el libro actual
+            console.log("Libro añadido al carrito:", book); // Depuración
+            alert('Libro agregado al carrito');
+        }
+    };
+
     if (!book || !author || !publisher) return <p>Loading...</p>;
 
     return (
@@ -60,8 +72,8 @@ const BookDetail = () => {
 
                     <div className="buy-options">
                         <label htmlFor="quantity">Quantity</label>
-                        <input type="number" id="quantity" defaultValue={1} min={1} className="quantity-input"/>
-                        <button className="buy-button">Add to bag</button>
+                        <input type="number" id="quantity" defaultValue={1} min={1} className="quantity-input" />
+                        <button onClick={handleAddToCart} className="buy-button">Añadir Carrito</button>
                     </div>
 
                     <div className="details-links">

@@ -1,7 +1,7 @@
-// src/components/header/Header.js
+// src/components/Header/Header.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Importa Link
 import HeaderLogo from './HeaderLogo';
 import GenreButtons from './GenreButtons';
 import SearchBar from './SearchBar';
@@ -35,7 +35,12 @@ const Header = ({ onSelectGenre }) => {
         <header className="header">
             <HeaderLogo />
             <GenreButtons genres={genres} onSelectGenre={handleSelectGenre} />
-            <SearchBar onSelectBook={handleSelectBook} /> {/* Pasamos onSelectBook */}
+            <SearchBar onSelectBook={handleSelectBook} />
+
+            {/* Icono de carrito que redirige a la página del carrito */}
+            <Link to="/cart" className="cart-link">
+                <i className="fa fa-shopping-cart"></i> Carrito
+            </Link>
         </header>
     );
 };

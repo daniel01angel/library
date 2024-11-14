@@ -1,25 +1,14 @@
 // src/components/Cart.js
-import React from 'react';
-import axiosInstance from '../api/axios';
+import React, { useContext } from 'react';
+import { CartContext } from '../context/CartContext';
+import '../styles/Cart.css';
 
-const Cart = ({ cart, setCart }) => {
+const Cart = () => {
+    const { cart, clearCart } = useContext(CartContext); // Obtén el carrito del contexto
+
+    console.log("Contenido del carrito en Cart.js:", cart); // Depuración
+
     const total = cart.reduce((acc, book) => acc + book.price, 0);
-
-    const handleConfirmPurchase = async () => {
-        const booksToBuy = cart.reduce((acc, book) => {
-            acc[book.bookId] = 1;
-            return acc;
-        }, {});
-
-        try {
-            await axiosInstance.post('/library/book/buy', booksToBuy);
-            setCart([]); // Vacía el carrito después de la compra
-            alert('Compra realizada con éxito');
-        } catch (error) {
-            console.error('Error confirming purchase:', error);
-            alert('Error al realizar la compra');
-        }
-    };
 
     return (
         <div className="cart-container">
@@ -39,9 +28,7 @@ const Cart = ({ cart, setCart }) => {
                     ))}
                     <div className="cart-total">
                         <h3>Total: ${total}</h3>
-                        <button onClick={handleConfirmPurchase}>
-                            Confirmar compra
-                        </button>
+                        <button onClick={clearCart}>Vaciar Carrito</button>
                     </div>
                 </div>
             )}
