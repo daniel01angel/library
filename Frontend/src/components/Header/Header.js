@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import HeaderLogo from './HeaderLogo';
+import HeaderLogo from './HeaderLogo'; // Asegúrate de que HeaderLogo no contenga el texto "Library"
 import GenreButtons from './GenreButtons';
 import SearchBar from './SearchBar';
 import '../../styles/Header/Header.css';
@@ -40,8 +40,7 @@ const Header = ({ onSelectGenre, isLoggedIn, setIsLoggedIn }) => {
         <header className="header" style={{ display: 'flex', alignItems: 'center', padding: '10px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Link to="/" className="logo-container" style={{ display: 'flex', alignItems: 'center' }}>
-                    <HeaderLogo />
-                    <span className="site-title">Library</span>
+                    <HeaderLogo /> {/* Si HeaderLogo ya contiene el texto "Library", no agregues <span className="site-title">Library</span> */}
                 </Link>
                 {isLoggedIn ? (
                     <button
