@@ -1,6 +1,8 @@
+
+// src/components/Header/Header.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Importa Link
 import HeaderLogo from './HeaderLogo';
 import GenreButtons from './GenreButtons';
 import SearchBar from './SearchBar';
@@ -36,6 +38,7 @@ const Header = ({ onSelectGenre, isLoggedIn, setIsLoggedIn }) => {
     }, []);
 
     return (
+
         <header className="header" style={{ display: 'flex', alignItems: 'center', padding: '10px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <HeaderLogo />
@@ -79,6 +82,16 @@ const Header = ({ onSelectGenre, isLoggedIn, setIsLoggedIn }) => {
             <div style={{ marginLeft: '20px' }}>
                 <SearchBar onSelectBook={handleSelectBook} />
             </div>
+=======
+        <header className="header">
+            <HeaderLogo />
+            <GenreButtons genres={genres} onSelectGenre={handleSelectGenre} />
+            <SearchBar onSelectBook={handleSelectBook} />
+
+            {/* Icono de carrito que redirige a la página del carrito */}
+            <Link to="/cart" className="cart-link">
+                <i className="fa fa-shopping-cart"></i> Carrito
+            </Link>
         </header>
     );
 };
