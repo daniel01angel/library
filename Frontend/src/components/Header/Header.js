@@ -1,3 +1,4 @@
+
 // src/components/Header/Header.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -7,7 +8,7 @@ import GenreButtons from './GenreButtons';
 import SearchBar from './SearchBar';
 import '../../styles/Header/Header.css';
 
-const Header = ({ onSelectGenre }) => {
+const Header = ({ onSelectGenre, isLoggedIn, setIsLoggedIn }) => {
     const [genres, setGenres] = useState([]);
     const navigate = useNavigate();
 
@@ -17,6 +18,11 @@ const Header = ({ onSelectGenre }) => {
 
     const handleSelectGenre = (genreId) => {
         onSelectGenre(genreId);
+    };
+
+    const handleLogout = () => {
+        setIsLoggedIn(false);
+        navigate('/');
     };
 
     useEffect(() => {
@@ -32,6 +38,51 @@ const Header = ({ onSelectGenre }) => {
     }, []);
 
     return (
+
+        <header className="header" style={{ display: 'flex', alignItems: 'center', padding: '10px 20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <HeaderLogo />
+                {isLoggedIn ? (
+                    <button
+                        onClick={handleLogout}
+                        style={{
+                            marginLeft: '10px',
+                            padding: '10px 20px',
+                            fontSize: '16px',
+                            cursor: 'pointer',
+                            backgroundColor: '#dc3545',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '5px'
+                        }}
+                    >
+                        Logout
+                    </button>
+                ) : (
+                    <button
+                        onClick={() => navigate('/login')}
+                        style={{
+                            marginLeft: '10px',
+                            padding: '10px 20px',
+                            fontSize: '16px',
+                            cursor: 'pointer',
+                            backgroundColor: '#007bff',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '5px'
+                        }}
+                    >
+                        Login
+                    </button>
+                )}
+            </div>
+            <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                <GenreButtons genres={genres} onSelectGenre={handleSelectGenre} />
+            </div>
+            <div style={{ marginLeft: '20px' }}>
+                <SearchBar onSelectBook={handleSelectBook} />
+            </div>
+=======
         <header className="header">
             <HeaderLogo />
             <GenreButtons genres={genres} onSelectGenre={handleSelectGenre} />

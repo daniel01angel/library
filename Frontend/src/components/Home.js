@@ -1,13 +1,17 @@
-// src/components/Home.js
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../api/axios';
-import BookList from './BookList';
-import Filters from './Filters';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
+import Header from './components/Header/Header';
+import BookList from './components/BookList';
+import BookDetail from './components/BookDetail';
+import Login from './components/Login';
+import axiosInstance from './api/axios';
+import Filters from './components/Filters';
 
 const Home = ({ searchQuery, onAddToCart }) => {
     const [filters, setFilters] = useState({
         genre: '',
-        priceRange: [0, 100],  // Asegúrate de que `priceRange` esté definido
+        priceRange: [0, 100],
         author: '',
         publicationDate: ''
     });
@@ -41,4 +45,29 @@ const Home = ({ searchQuery, onAddToCart }) => {
     );
 };
 
-export default Home;
+const App = () => {
+    const [selectedBook, setSelectedBook] = useState(null);
+    const [selectedGenre, setSelectedGenre] = useState(null);
+
+    const handleSelectBook = (book) => {
+        setSelectedBook(book);
+    };
+
+    const handleSelectGenre = (genreId) => {
+        setSelectedGenre(genreId);
+        setSelectedBook(null);
+    };
+
+    return (
+        <Router>
+            <Header onSelectBook={handleSelectBook} onSelectGenre={handleSelectGenre} />
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/book/:id" element={<BookDetail />} />
+                <Route path="/login" element={<Login />} />
+            </Routes>
+        </Router>
+    );
+};
+
+export default App;
