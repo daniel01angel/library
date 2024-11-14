@@ -3,6 +3,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { CartContext } from '../context/CartContext'; // Importa el contexto del carrito
+import Notification from './Notification'; // Importa el componente de notificación
 import '../styles/BookDetail.css';
 
 const BookDetail = () => {
@@ -12,6 +13,7 @@ const BookDetail = () => {
     const [author, setAuthor] = useState(null);
     const [publisher, setPublisher] = useState(null);
     const [reviews, setReviews] = useState([]);
+    const [showNotification, setShowNotification] = useState(false); // Estado para manejar la visibilidad de la notificación
 
     useEffect(() => {
         const fetchBookDetails = async () => {
@@ -44,8 +46,7 @@ const BookDetail = () => {
     const handleAddToCart = () => {
         if (book) {
             addToCart(book); // Llama a addToCart pasando el libro actual
-            console.log("Libro añadido al carrito:", book); // Depuración
-            alert('Libro agregado al carrito');
+            setShowNotification(true); // Muestra la notificación
         }
     };
 
@@ -119,6 +120,13 @@ const BookDetail = () => {
                     <p>No reviews available for this book.</p>
                 )}
             </div>
+
+            {/* Notificación */}
+            <Notification
+                message="Libro agregado al carrito"
+                show={showNotification}
+                onClose={() => setShowNotification(false)}
+            />
         </div>
     );
 };

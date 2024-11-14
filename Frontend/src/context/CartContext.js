@@ -1,3 +1,4 @@
+// src/context/CartContext.js
 import React, { createContext, useState } from 'react';
 
 export const CartContext = createContext();
@@ -15,8 +16,11 @@ const CartProvider = ({ children }) => {
         setCart([]); // Vaciar carrito
     };
 
+    // Contador de la cantidad de libros en el carrito
+    const cartCount = cart.length;
+
     return (
-        <CartContext.Provider value={{ cart, addToCart, clearCart }}>
+        <CartContext.Provider value={{ cart, addToCart, clearCart, cartCount }}>
             {children}
         </CartContext.Provider>
     );
