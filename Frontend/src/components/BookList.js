@@ -7,7 +7,6 @@ import '../styles/BookList.css';
 const BookList = ({ selectedGenre }) => {
     const [books, setBooks] = useState([]);
     const navigate = useNavigate(); // Hook para navegar a la página de detalles
-
     useEffect(() => {
         const fetchBooks = async () => {
             try {
