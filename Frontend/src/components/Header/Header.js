@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Importa useTranslation
 import HeaderLogo from './HeaderLogo';
 import GenreButtons from './GenreButtons';
 import SearchBar from './SearchBar';
@@ -9,6 +10,7 @@ import { CartContext } from '../../context/CartContext'; // Importa el contexto 
 import '../../styles/Header/Header.css';
 
 const Header = ({ onSelectGenre, isLoggedIn, setIsLoggedIn }) => {
+    const { t, i18n } = useTranslation(); // Desestructura t e i18n
     const [genres, setGenres] = useState([]);
     const navigate = useNavigate();
     const { cartCount } = useContext(CartContext); // Obtiene el contador de carrito desde el contexto
@@ -24,6 +26,10 @@ const Header = ({ onSelectGenre, isLoggedIn, setIsLoggedIn }) => {
     const handleLogout = () => {
         setIsLoggedIn(false);
         navigate('/');
+    };
+
+    const handleLanguageChange = (lang) => {
+        i18n.changeLanguage(lang); // Cambia el idioma con i18n
     };
 
     useEffect(() => {
@@ -58,7 +64,7 @@ const Header = ({ onSelectGenre, isLoggedIn, setIsLoggedIn }) => {
                             borderRadius: '5px'
                         }}
                     >
-                        Logout
+                        {t('Logout')}
                     </button>
                 ) : (
                     <button
@@ -74,7 +80,7 @@ const Header = ({ onSelectGenre, isLoggedIn, setIsLoggedIn }) => {
                             borderRadius: '5px'
                         }}
                     >
-                        Login
+                        {t('Login')}
                     </button>
                 )}
             </div>
@@ -84,8 +90,24 @@ const Header = ({ onSelectGenre, isLoggedIn, setIsLoggedIn }) => {
             <div style={{ marginLeft: '20px' }}>
                 <SearchBar onSelectBook={handleSelectBook} />
             </div>
+            <div style={{ marginLeft: '20px', display: 'flex', alignItems: 'center' }}>
+                <button
+                    onClick={() => handleLanguageChange('en')}
+                    className={`language-button ${i18n.language === 'en' ? 'active' : ''}`}
+                    style={{ marginRight: '10px', cursor: 'pointer' }}
+                >
+                    EN
+                </button>
+                <button
+                    onClick={() => handleLanguageChange('es')}
+                    className={`language-button ${i18n.language === 'es' ? 'active' : ''}`}
+                    style={{ cursor: 'pointer' }}
+                >
+                    ES
+                </button>
+            </div>
             <Link to="/cart" className="cart-link" style={{ marginLeft: '20px', color: 'inherit', textDecoration: 'none', position: 'relative' }}>
-                <i className="fa fa-shopping-cart"></i> Carrito
+                <i className="fa fa-shopping-cart"></i> {t('Cart')}
                 {cartCount > 0 && (
                     <span style={{
                         position: 'absolute',
