@@ -9,6 +9,7 @@ const Login = ({ setIsLoggedIn }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
+  // Manejo del login con email y contraseña
   const handleLogin = () => {
     if (email && password) {
       console.log('Logging in with email:', email);
@@ -19,23 +20,26 @@ const Login = ({ setIsLoggedIn }) => {
     }
   };
 
+  // Registro básico (sin lógica avanzada)
   const handleRegister = () => {
     console.log('Registering with email:', email);
   };
 
+  // Manejo del login exitoso con Google
   const handleGoogleSuccess = (credentialResponse) => {
     console.log('Google login successful:', credentialResponse);
     setIsLoggedIn(true);
     navigate('/');
   };
 
+  // Manejo del login fallido con Google
   const handleGoogleFailure = (error) => {
     console.error('Google login failed:', error);
     setErrorMessage('Google login failed. Please try again.');
   };
 
   return (
-    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+    <GoogleOAuthProvider clientId="290181437692-sbvs25klnskordo26alc69igj5gg4uc4.apps.googleusercontent.com">
       <div className="login-container" style={{ 
           maxWidth: '400px', 
           margin: '50px auto', 
@@ -53,6 +57,7 @@ const Login = ({ setIsLoggedIn }) => {
         {errorMessage && (
           <div style={{ color: 'red', marginBottom: '15px' }}>{errorMessage}</div>
         )}
+        {/* Formulario de login */}
         <div className="form-group" style={{ marginBottom: '15px', width: '100%' }}>
           <label style={{ marginBottom: '5px', fontWeight: 'bold', fontSize: '14px', color: '#555' }}>Email</label>
           <input
@@ -95,6 +100,7 @@ const Login = ({ setIsLoggedIn }) => {
             onBlur={(e) => e.target.style.borderColor = '#ccc'}
           />
         </div>
+        {/* Botones de Login y Registro */}
         <button 
           onClick={handleLogin} 
           style={{
@@ -133,11 +139,11 @@ const Login = ({ setIsLoggedIn }) => {
         >
           Register
         </button>
+        {/* Botón de Google Login */}
         <div className="google-login" style={{ textAlign: 'center', marginTop: '10px' }}>
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleFailure}
-            style={{ borderRadius: '5px' }}
           />
         </div>
       </div>
