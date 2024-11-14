@@ -9,6 +9,7 @@ import Login from './components/Login';
 const App = () => {
     const [selectedBook, setSelectedBook] = useState(null);
     const [selectedGenre, setSelectedGenre] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const handleSelectBook = (book) => {
         setSelectedBook(book);
@@ -21,11 +22,11 @@ const App = () => {
 
     return (
         <Router>
-            <Header onSelectBook={handleSelectBook} onSelectGenre={handleSelectGenre} />
+            <Header onSelectBook={handleSelectBook} onSelectGenre={handleSelectGenre} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
             <Routes>
                 <Route path="/" element={<BookList selectedGenre={selectedGenre} />} />
                 <Route path="/book/:id" element={<BookDetail />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
             </Routes>
         </Router>
     );
