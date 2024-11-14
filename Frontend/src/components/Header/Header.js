@@ -1,8 +1,7 @@
-// src/components/Header/Header.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import HeaderLogo from './HeaderLogo'; // Asegúrate de que HeaderLogo no contenga el texto "Library"
+import HeaderLogo from './HeaderLogo';
 import GenreButtons from './GenreButtons';
 import SearchBar from './SearchBar';
 import '../../styles/Header/Header.css';
@@ -40,7 +39,7 @@ const Header = ({ onSelectGenre, isLoggedIn, setIsLoggedIn }) => {
         <header className="header" style={{ display: 'flex', alignItems: 'center', padding: '10px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Link to="/" className="logo-container" style={{ display: 'flex', alignItems: 'center' }}>
-                    <HeaderLogo /> {/* Si HeaderLogo ya contiene el texto "Library", no agregues <span className="site-title">Library</span> */}
+                    <HeaderLogo />
                 </Link>
                 {isLoggedIn ? (
                     <button
@@ -82,7 +81,6 @@ const Header = ({ onSelectGenre, isLoggedIn, setIsLoggedIn }) => {
             <div style={{ marginLeft: '20px' }}>
                 <SearchBar onSelectBook={handleSelectBook} />
             </div>
-            {/* Icono de carrito que redirige a la página del carrito */}
             <Link to="/cart" className="cart-link" style={{ marginLeft: '20px', color: 'inherit', textDecoration: 'none' }}>
                 <i className="fa fa-shopping-cart"></i> Carrito
             </Link>
