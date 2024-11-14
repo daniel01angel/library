@@ -1,4 +1,3 @@
-// src/components/header/Header.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -32,10 +31,31 @@ const Header = ({ onSelectGenre }) => {
     }, []);
 
     return (
-        <header className="header">
-            <HeaderLogo />
-            <GenreButtons genres={genres} onSelectGenre={handleSelectGenre} />
-            <SearchBar onSelectBook={handleSelectBook} /> {/* Pasamos onSelectBook */}
+        <header className="header" style={{ display: 'flex', alignItems: 'center', padding: '10px 20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <HeaderLogo />
+                <button 
+                    onClick={() => navigate('/login')} 
+                    style={{ 
+                        marginLeft: '10px', 
+                        padding: '10px 20px', 
+                        fontSize: '16px', 
+                        cursor: 'pointer', 
+                        backgroundColor: '#007bff', 
+                        color: 'white', 
+                        border: 'none', 
+                        borderRadius: '5px' 
+                    }}
+                >
+                    Login
+                </button>
+            </div>
+            <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                <GenreButtons genres={genres} onSelectGenre={handleSelectGenre} />
+            </div>
+            <div style={{ marginLeft: '20px' }}>
+                <SearchBar onSelectBook={handleSelectBook} />
+            </div>
         </header>
     );
 };
