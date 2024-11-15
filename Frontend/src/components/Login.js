@@ -23,7 +23,9 @@ const Login = ({ setIsLoggedIn }) => {
   // Registro básico (sin lógica avanzada)
   const handleRegister = () => {
     console.log('Registering with email:', email);
+    navigate('/register');
   };
+
 
   // Manejo del login exitoso con Google
   const handleGoogleSuccess = async (credentialResponse) => {

@@ -5,9 +5,11 @@ import Header from './components/Header/Header';
 import BookList from './components/BookList';
 import BookDetail from './components/BookDetail';
 import Login from './components/Login';
+import Register from './components/Register';
 import CartProvider from './context/CartContext'; // Importa el proveedor de contexto del carrito
 import Cart from './components/Cart'; // Asegúrate de que la ruta sea correcta
 import NotFound from './components/NotFound';
+import Breadcrumb from './components/Breadcrumb'; // Importa el Breadcrumb
 
 const App = () => {
     const [selectedBook, setSelectedBook] = useState(null);
@@ -32,14 +34,18 @@ const App = () => {
                     isLoggedIn={isLoggedIn} // Pasar isLoggedIn
                     setIsLoggedIn={setIsLoggedIn} // Pasar setIsLoggedIn para poder cambiarlo
                 />
-                <Routes>
-                    <Route path="/" element={<BookList selectedGenre={selectedGenre} />} />
-                    <Route path="/book/:id" element={<BookDetail />} />
-                    <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} /> {/* Pasar setIsLoggedIn */}
-                    <Route path="/cart" element={<Cart />} />
-                    <Route path="*" element={<NotFound />} />
-                    <Route path="/genre/:genreId" element={<BookList />} />
-                </Routes>
+                <div style={{ padding: '20px' }}>
+                    <Breadcrumb /> {/* Añade el Breadcrumb aquí */}
+                    <Routes>
+                        <Route path="/" element={<BookList />} />
+                        <Route path="/book/:id" element={<BookDetail />} />
+                        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+                        <Route path="/register" element={<Register />} /> {/* Nueva ruta para el registro */}
+                        <Route path="/cart" element={<Cart />} />
+                        <Route path="*" element={<NotFound />} />
+                        <Route path="/genre/:genreId" element={<BookList />} />
+                    </Routes>
+                </div>
             </Router>
         </CartProvider>
     );
