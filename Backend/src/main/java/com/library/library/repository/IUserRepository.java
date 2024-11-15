@@ -8,4 +8,6 @@ public interface IUserRepository {
     List<User> getUser(int userId, String firstName, String lastName);
     int updateUser(User user);
     int deleteUser(int userId);
+    int createUser(User newUser);
+    List<User> getUserByGoogleId(String googleId);
 }

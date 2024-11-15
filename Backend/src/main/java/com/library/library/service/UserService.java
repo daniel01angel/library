@@ -25,13 +25,11 @@ public class UserService implements IUserService {
     @Override
     public void updateUser(User updatedUser) {
         try {
-            // Obtener el usuario existente
             User existingUser = iUserRepository.getUser(updatedUser.getUserId(), null, null).stream().findFirst().orElse(null);
             if (existingUser == null) {
                 throw new RuntimeException("User not found with ID: " + updatedUser.getUserId());
             }
 
-            // Actualizar solo los campos que no son nulos o tienen valor no predeterminado
             if (updatedUser.getFirstName() != null) {
                 existingUser.setFirstName(updatedUser.getFirstName());
             }
@@ -60,7 +58,6 @@ public class UserService implements IUserService {
                 existingUser.setAvailableBalance(updatedUser.getAvailableBalance());
             }
 
-            // Llamar al repositorio para actualizar el usuario
             int rowsUpdated = iUserRepository.updateUser(existingUser);
             if (rowsUpdated == 0) {
                 throw new RuntimeException("Failed to update user with ID: " + updatedUser.getUserId());
@@ -80,5 +77,24 @@ public class UserService implements IUserService {
         } catch (Exception e) {
             throw new RuntimeException("Error deleting user", e);
         }
+    }
+
+    // Nuevo método para autenticación con Google
+    public User findOrRegisterGoogleUser(String googleId, String email, String firstName, String lastName) {
+        // Buscar al usuario por su Google ID
+        List<User> users = iUserRepository.getUserByGoogleId(googleId);
+        if (!users.isEmpty()) {
+            return users.get(0);
+        }
+
+        // Si el usuario no existe, registrarlo
+        User newUser = new User();
+        newUser.setGoogleId(googleId);
+        newUser.setEmail(email);
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setCityId(0); // Un valor predeterminado, por ejemplo 0.
+        iUserRepository.createUser(newUser);
+        return newUser;
     }
 }
