@@ -38,7 +38,11 @@ i18n.use(initReactI18next).init({
                 "No description available.": "No description available.",
                 "No reviews available for this book.": "No reviews available for this book.",
                 "Book added to cart": "Book added to cart",
-                "Loading": "Loading"
+                "Loading": "Loading",
+                "Clear Car": "Clear Car",
+                "Buy": "Buy",
+                "Shopping Cart": "Shopping Cart",
+                "No items in the cart": "No items in the cart"
             }
         },
         es: {
@@ -75,7 +79,10 @@ i18n.use(initReactI18next).init({
                 "No description available.": "No hay descripción disponible.",
                 "No reviews available for this book.": "No hay reseñas disponibles para este libro.",
                 "Book added to cart": "Libro agregado al carrito",
-                "Loading": "Cargando"
+                "Loading": "Cargando",
+                "Buy": "Comprar",
+                "Shopping Cart": "Carrito de compras",
+                "No items in the cart": "Carrito sin artículos"
             }
         }
     },

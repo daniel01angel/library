@@ -27,7 +27,7 @@ const Cart = () => {
         <div className="cart-container">
             <h2>{t('Shopping Cart')}</h2>
             {cart.length === 0 ? (
-                <p>{t('No items in the cart.')}</p>
+                <p>{t('No items in the cart')}</p>
             ) : (
                 <div className="cart-items">
                     {cart.map((book, index) => (
@@ -42,8 +42,8 @@ const Cart = () => {
                     <div className="cart-total">
                         <h3>{t('Total')}: ${total.toFixed(2)}</h3>
                         <div className="cart-buttons">
-                            <button className="buy-button" onClick={handlePurchase}>Comprar</button>
-                            <button className="clear-cart-button" onClick={clearCart}>Vaciar Carrito</button>
+                            <button className="buy-button" onClick={handlePurchase}>{t('Purchase')}</button>
+                            <button className="clear-cart-button" onClick={clearCart}>{t('Clear Cart')}</button>
                         </div>
                     </div>
                 </div>
