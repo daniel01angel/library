@@ -1,0 +1,29 @@
+/* src/styles/Breadcrumb.css */
+.breadcrumb-container {
+    padding: 10px 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb-link {
+    color: #007bff;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+.breadcrumb-link:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb-separator {
+    margin: 0 8px;
+    color: #6c757d;
+}
+
+.breadcrumb-current {
+    color: #6c757d;
+    text-transform: capitalize;
+}
