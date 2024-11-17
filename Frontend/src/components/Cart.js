@@ -1,26 +1,56 @@
 // src/components/Cart.js
 import React, { useContext, useState } from 'react';
 import { CartContext } from '../context/CartContext';
-import Notification from './Notification'; // Importa el componente de notificación
+import Notification from './Notification';
 import { useTranslation } from 'react-i18next';
 import '../styles/Cart.css';
 
 const Cart = () => {
-    const { cart, clearCart } = useContext(CartContext); // Obtén el carrito del contexto
-    const { t } = useTranslation(); // Inicializa useTranslation
-    const [showNotification, setShowNotification] = useState(false); // Estado para controlar la visibilidad de la notificación
+    const { cart, clearCart } = useContext(CartContext);
+    const { t } = useTranslation();
+    const [showNotification, setShowNotification] = useState(false);
 
-    const total = cart.reduce((acc, book) => acc + book.price, 0);
+    const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
-    // Manejar la compra y mostrar la notificación
-    const handlePurchase = () => {
-        clearCart(); // Vaciar el carrito tras la compra
-        setShowNotification(true); // Mostrar la notificación de compra
+    // Manejar compra y mostrar notificación
+    const handlePurchase = async () => {
+        // Construir el objeto booksToBuy
+        const booksToBuy = {};
+        cart.forEach((item) => {
+            const bookId = item.id || item.bookID;
+            if (bookId !== undefined) {
+                booksToBuy[bookId] = item.quantity;
+            } else {
+                console.error("Item sin ID:", item);
+            }
+        });
 
-        // Ocultar la notificación automáticamente después de 3 segundos
-        setTimeout(() => {
-            setShowNotification(false);
-        }, 3000);
+        console.log("booksToBuy:", booksToBuy); // Log para verificar
+
+        try {
+            const response = await fetch('http://localhost:8080/library/book/buy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(booksToBuy),
+            });
+
+            if (response.ok) {
+                // Compra exitosa
+                clearCart();
+                setShowNotification(true);
+
+                setTimeout(() => {
+                    setShowNotification(false);
+                }, 3000);
+            } else {
+                // Manejar errores
+                console.error('Compra fallida:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error durante la compra:', error);
+        }
     };
 
     return (
@@ -30,12 +60,15 @@ const Cart = () => {
                 <p>{t('No items in the cart')}</p>
             ) : (
                 <div className="cart-items">
-                    {cart.map((book, index) => (
+                    {cart.map((item, index) => (
                         <div key={index} className="cart-item">
-                            <img src={book.imageURL} alt={book.title} className="cart-image" />
+                            <img src={item.imageURL} alt={item.title} className="cart-image" />
                             <div className="cart-item-details">
-                                <p className="book-name">{book.title}</p>
-                                <p className="book-price">${book.price}</p>
+                                <p className="book-name">{item.title}</p>
+                                <p className="book-price">
+                                    {item.quantity} x ${item.price} = $
+                                    {(item.price * item.quantity).toFixed(2)}
+                                </p>
                             </div>
                         </div>
                     ))}

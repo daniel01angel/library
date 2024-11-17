@@ -33,12 +33,10 @@ public class BookRepository implements IBookRepository {
 
     @Override
     public int buyBook(int bookId, int quantity) {
+        System.out.println("Repository - buyBook with bookId: " + bookId + ", quantity: " + quantity); // Registro para depuración
         String SQL = "UPDATE Books SET Stock = Stock - ? WHERE BookID = ? AND Stock >= ?";
-        return jdbcTemplate.update(SQL, quantity, bookId, quantity);
-    }
-
-    @Override
-    public int updateBook(Book book) {
-        return 0;
+        int result = jdbcTemplate.update(SQL, quantity, bookId, quantity);
+        System.out.println("Result of update query: " + result); // Registro del resultado
+        return result;
     }
 }

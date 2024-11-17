@@ -8,9 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
@@ -34,16 +32,23 @@ public class BookController {
     }
 
     @PostMapping("/buy")
-    public ResponseEntity<String> buyBooks(@RequestBody Map<Integer, Integer> booksToBuy, HttpServletRequest request) {
+    public ResponseEntity<String> buyBooks(@RequestBody Map<String, Integer> booksToBuyStringKeys, HttpServletRequest request) {
         try {
+            System.out.println("buyBooks called with data: " + booksToBuyStringKeys); // Registro para depuración
             Long userId = 1L; // ID de usuario simulado o autenticado
+
+            // Convertir claves de String a Integer
+            Map<Integer, Integer> booksToBuy = new HashMap<>();
+            for (Map.Entry<String, Integer> entry : booksToBuyStringKeys.entrySet()) {
+                booksToBuy.put(Integer.parseInt(entry.getKey()), entry.getValue());
+            }
 
             // Realizar la compra de libros
             iBookService.buyBooks(booksToBuy);
 
             // Registrar el log de la transacción
             double amount = booksToBuy.values().stream().mapToDouble(Integer::doubleValue).sum();
-            String ipAddress = request.getRemoteAddr(); // Obtener la IP
+            String ipAddress = request.getRemoteAddr();
 
             // Registro de transacción
             transactionLogService.logTransaction(userId, new ArrayList<>(booksToBuy.keySet()), amount, ipAddress);

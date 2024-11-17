@@ -15,6 +15,17 @@ public class UserRepository implements IUserRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+
+    @Override
+    public String getLastMembershipCardNumber() {
+        String SQL = "SELECT TOP 1 MembershipCardNumber FROM Users ORDER BY MembershipCardNumber DESC";
+        try {
+            return jdbcTemplate.queryForObject(SQL, String.class);
+        } catch (Exception e) {
+            return "0"; // Si no hay registros, devuelve "0"
+        }
+    }
+
     @Override
     public List<User> getUser(int userId, String firstName, String lastName) {
         String SQL = "SELECT * FROM Users WHERE 1=1";
@@ -63,7 +74,7 @@ public class UserRepository implements IUserRepository {
                 user.getAge() != 0 ? user.getAge() : 0,  // Si no se proporciona, usar 0
                 user.getGender() != null ? user.getGender() : "",  // Valor predeterminado vacío si es null
                 user.getProfession() != null ? user.getProfession() : "",  // Valor predeterminado vacío si es null
-                user.getMembershipCardNumber() != null ? user.getMembershipCardNumber() : "",  // Valor predeterminado vacío si es null
+                user.getMembershipCardNumber() != null ? user.getMembershipCardNumber() : "MC4000",  // Valor predeterminado vacío si es null
                 user.getAvailableBalance() != null ? user.getAvailableBalance() : BigDecimal.ZERO  // Valor predeterminado 0 si es null
         );
     }

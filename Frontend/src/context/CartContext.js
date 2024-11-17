@@ -3,24 +3,33 @@ import React, { createContext, useState } from 'react';
 
 export const CartContext = createContext();
 
-const CartProvider = ({ children }) => {
-    const [cart, setCart] = useState([]); // Estado inicial del carrito
+export const CartProvider = ({ children }) => {
+    const [cart, setCart] = useState([]);
 
-    const addToCart = (book) => {
-        setCart((prevCart) => [...prevCart, book]); // Agregar libro al estado del carrito
-        console.log("Libro agregado al carrito:", book); // Depuración
-        console.log("Estado del carrito después de agregar:", cart); // Depuración
+    const addToCart = (newItem) => {
+        setCart((prevCart) => {
+            const existingItemIndex = prevCart.findIndex(
+                (item) => item.id === newItem.id
+            );
+
+            if (existingItemIndex !== -1) {
+                // Actualizar cantidad si el artículo ya existe
+                const updatedCart = [...prevCart];
+                updatedCart[existingItemIndex].quantity += newItem.quantity;
+                return updatedCart;
+            } else {
+                // Agregar nuevo artículo al carrito
+                return [...prevCart, newItem];
+            }
+        });
     };
 
     const clearCart = () => {
-        setCart([]); // Vaciar carrito
+        setCart([]);
     };
 
-    // Contador de la cantidad de libros en el carrito
-    const cartCount = cart.length;
-
     return (
-        <CartContext.Provider value={{ cart, addToCart, clearCart, cartCount }}>
+        <CartContext.Provider value={{ cart, addToCart, clearCart }}>
             {children}
         </CartContext.Provider>
     );

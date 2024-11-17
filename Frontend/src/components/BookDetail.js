@@ -10,12 +10,13 @@ import '../styles/BookDetail.css';
 const BookDetail = () => {
     const { id } = useParams();
     const { addToCart } = useContext(CartContext);
-    const { t } = useTranslation(); // Obtén t para traducción
+    const { t } = useTranslation();
     const [book, setBook] = useState(null);
     const [author, setAuthor] = useState(null);
     const [publisher, setPublisher] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [showNotification, setShowNotification] = useState(false);
+    const [quantity, setQuantity] = useState(1); // Estado para la cantidad
 
     useEffect(() => {
         const fetchBookDetails = async () => {
@@ -42,14 +43,13 @@ const BookDetail = () => {
 
     const handleAddToCart = () => {
         if (book) {
-            addToCart(book);
+            addToCart({ ...book, quantity: parseInt(quantity) }); // Incluir cantidad
             setShowNotification(true);
         }
     };
 
     // Función para traducir dinámicamente contenido específico
     const translateContent = (text) => {
-        // Busca en el texto palabras clave y las traduce
         if (!text) return text;
         return text
             .replace(/racial injustice/gi, t('injusticia racial'))
@@ -76,9 +76,18 @@ const BookDetail = () => {
                     <p className="book-price">USD {book.price || t("Price Unavailable")}</p>
 
                     <div className="buy-options">
-                        <label htmlFor="quantity">{t("Quantity")}</label>
-                        <input type="number" id="quantity" defaultValue={1} min={1} className="quantity-input" />
-                        <button onClick={handleAddToCart} className="buy-button">{t("Add to Cart")}</button>
+                        <label htmlFor="quantity">{t("Cantidad")}</label>
+                        <input
+                            type="number"
+                            id="quantity"
+                            value={quantity}
+                            min={1}
+                            className="quantity-input"
+                            onChange={(e) => setQuantity(e.target.value)} // Actualizar estado de cantidad
+                        />
+                        <button onClick={handleAddToCart} className="buy-button">
+                            {t("Añadir al Carrito")}
+                        </button>
                     </div>
 
                     <div className="details-links">

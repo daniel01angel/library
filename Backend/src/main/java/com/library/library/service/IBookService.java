@@ -8,5 +8,4 @@ import java.util.Map;
 public interface IBookService {
     public List<Book> getBook(int id, String title, String isbn);
     public void buyBooks(Map<Integer, Integer> booksToBuy);
-    public int updateBook(Book book);
 }
