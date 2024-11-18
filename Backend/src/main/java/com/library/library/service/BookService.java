@@ -1,9 +1,12 @@
 package com.library.library.service;
 
+import com.library.library.exception.InsufficientStockException;
 import com.library.library.model.Book;
 import com.library.library.repository.IBookRepository;
+import com.library.library.exception.InsufficientStockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Map;
@@ -23,15 +26,21 @@ public class BookService implements IBookService {
         }
     }
 
+
+    // En el método buyBooks
     @Override
     public void buyBooks(Map<Integer, Integer> booksToBuy) {
         for (Map.Entry<Integer, Integer> entry : booksToBuy.entrySet()) {
             int bookId = entry.getKey();
             int quantity = entry.getValue();
 
-            // Validar la cantidad
-            if (quantity <= 0) {
-                throw new IllegalArgumentException("The quantity for book ID " + bookId + " must be greater than 0.");
+            // Obtener el libro y verificar el stock disponible
+            Book book = iBookRepository.getBook(bookId, null, null).stream().findFirst().orElse(null);
+            if (book == null) {
+                throw new IllegalArgumentException("Book with ID " + bookId + " does not exist.");
+            }
+            if (quantity > book.getStock()) {
+                throw new InsufficientStockException("Requested quantity exceeds available stock for book ID " + bookId);
             }
 
             // Intentar comprar el libro (descontar stock)
@@ -42,4 +51,5 @@ public class BookService implements IBookService {
             }
         }
     }
+
 }
