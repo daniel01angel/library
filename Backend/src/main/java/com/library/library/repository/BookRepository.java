@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -16,27 +17,37 @@ public class BookRepository implements IBookRepository {
 
     @Override
     public List<Book> getBook(int id, String title, String isbn) {
-        String SQL = "SELECT * FROM Books WHERE 1=1";
+        StringBuilder SQL = new StringBuilder("SELECT * FROM Books WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        // Construir la consulta de manera segura, usando parámetros
         if (id > 0) {
-            SQL += " AND BookID = ?";
-            return jdbcTemplate.query(SQL, new Object[]{id}, BeanPropertyRowMapper.newInstance(Book.class));
-        } else if (title != null && !title.isEmpty()) {
-            SQL += " AND title LIKE ?";
-            return jdbcTemplate.query(SQL, new Object[]{"%" + title + "%"}, BeanPropertyRowMapper.newInstance(Book.class));
-        } else if (isbn != null && !isbn.isEmpty()) {
-            SQL += " AND ISBN = ?";
-            return jdbcTemplate.query(SQL, new Object[]{isbn}, BeanPropertyRowMapper.newInstance(Book.class));
-        } else {
-            return jdbcTemplate.query(SQL, BeanPropertyRowMapper.newInstance(Book.class));
+            SQL.append(" AND BookID = ?");
+            params.add(id);
         }
+        if (title != null && !title.isEmpty()) {
+            SQL.append(" AND title LIKE ?");
+            params.add("%" + title + "%");
+        }
+        if (isbn != null && !isbn.isEmpty()) {
+            SQL.append(" AND ISBN = ?");
+            params.add(isbn);
+        }
+
+        return jdbcTemplate.query(SQL.toString(), params.toArray(), BeanPropertyRowMapper.newInstance(Book.class));
     }
 
     @Override
     public int buyBook(int bookId, int quantity) {
-        System.out.println("Repository - buyBook with bookId: " + bookId + ", quantity: " + quantity); // Registro para depuración
+        // Registrar detalles para depuración
+        System.out.println("Repository - buyBook with bookId: " + bookId + ", quantity: " + quantity);
+
+        // Utilizar una consulta parametrizada para evitar SQL Injection
         String SQL = "UPDATE Books SET Stock = Stock - ? WHERE BookID = ? AND Stock >= ?";
         int result = jdbcTemplate.update(SQL, quantity, bookId, quantity);
-        System.out.println("Result of update query: " + result); // Registro del resultado
+
+        // Registrar el resultado de la operación
+        System.out.println("Result of update query: " + result);
         return result;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -36,19 +37,23 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public List<User> getUser(int userId, String firstName, String lastName) {
-        String SQL = "SELECT * FROM Users WHERE 1=1";
+        StringBuilder SQL = new StringBuilder("SELECT * FROM Users WHERE 1=1 ");
+        List<Object> params = new ArrayList<>();
+
         if (userId > 0) {
-            SQL += " AND UserID = ?";
-            return jdbcTemplate.query(SQL, new Object[]{userId}, BeanPropertyRowMapper.newInstance(User.class));
-        } else if (firstName != null && !firstName.isEmpty()) {
-            SQL += " AND FirstName LIKE ?";
-            return jdbcTemplate.query(SQL, new Object[]{"%" + firstName + "%"}, BeanPropertyRowMapper.newInstance(User.class));
-        } else if (lastName != null && !lastName.isEmpty()) {
-            SQL += " AND LastName LIKE ?";
-            return jdbcTemplate.query(SQL, new Object[]{"%" + lastName + "%"}, BeanPropertyRowMapper.newInstance(User.class));
-        } else {
-            return jdbcTemplate.query(SQL, BeanPropertyRowMapper.newInstance(User.class));
+            SQL.append("AND UserID = ? ");
+            params.add(userId);
         }
+        if (firstName != null && !firstName.isEmpty()) {
+            SQL.append("AND FirstName LIKE ? ");
+            params.add("%" + firstName + "%");
+        }
+        if (lastName != null && !lastName.isEmpty()) {
+            SQL.append("AND LastName LIKE ? ");
+            params.add("%" + lastName + "%");
+        }
+
+        return jdbcTemplate.query(SQL.toString(), params.toArray(), BeanPropertyRowMapper.newInstance(User.class));
     }
 
     @Override
