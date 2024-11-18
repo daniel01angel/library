@@ -9,9 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -23,18 +27,23 @@ public class MembershipCardTransactionController {
     @Autowired
     private IUserService userService;
 
+    // Inicializar el logger
+    private static final Logger logger = LoggerFactory.getLogger(MembershipCardTransactionController.class);
+
     @PostMapping("/{userId}/create-transaction")
-    public ResponseEntity<String> createTransaction(@PathVariable int userId, @RequestBody BigDecimal amount) {
+    public ResponseEntity<?> createTransaction(@PathVariable int userId, @RequestBody BigDecimal amount) {
         try {
             // Validar si el usuario existe
             User user = userService.getUser(userId, null, null).stream().findFirst().orElse(null);
             if (user == null) {
-                return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Usuario no encontrado"));
             }
 
             // Validar el monto de recarga
-            if (amount.compareTo(new BigDecimal(50000)) < 0 || amount.compareTo(new BigDecimal(200000)) > 0) {
-                return new ResponseEntity<>("Amount must be between 50,000 and 200,000", HttpStatus.BAD_REQUEST);
+            if (amount.compareTo(new BigDecimal("50000")) < 0 || amount.compareTo(new BigDecimal("200000")) > 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("error", "El monto debe estar entre 50,000 y 200,000"));
             }
 
             // Crear la transacción
@@ -44,32 +53,40 @@ public class MembershipCardTransactionController {
             transaction.setAmount(amount);
             transactionService.createTransaction(transaction);
 
-            return new ResponseEntity<>("Transaction created successfully", HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of("message", "Transacción creada exitosamente"));
         } catch (Exception e) {
-            return new ResponseEntity<>("Error creating transaction: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error("Error al crear la transacción para el usuario con ID {}", userId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Ocurrió un error al crear la transacción. Por favor, inténtalo de nuevo más tarde."));
         }
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<MembershipCardTransaction>> getTransactionsByUserId(@PathVariable int userId) {
+    public ResponseEntity<?> getTransactionsByUserId(@PathVariable int userId) {
         try {
             List<MembershipCardTransaction> transactions = transactionService.getTransactionsByUserId((long) userId);
             if (transactions.isEmpty()) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "No se encontraron transacciones para el usuario especificado"));
             }
-            return new ResponseEntity<>(transactions, HttpStatus.OK);
+            return ResponseEntity.ok(transactions);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error("Error al obtener las transacciones para el usuario con ID {}", userId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Ocurrió un error al obtener las transacciones. Por favor, inténtalo de nuevo más tarde."));
         }
     }
 
     @DeleteMapping("/{transactionId}")
-    public ResponseEntity<String> deleteTransaction(@PathVariable Long transactionId) {
+    public ResponseEntity<?> deleteTransaction(@PathVariable Long transactionId) {
         try {
             transactionService.deleteTransaction(transactionId);
-            return new ResponseEntity<>("Transaction deleted successfully", HttpStatus.OK);
+            return ResponseEntity.ok(Map.of("message", "Transacción eliminada exitosamente"));
         } catch (Exception e) {
-            return new ResponseEntity<>("Error deleting transaction: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            logger.error("Error al eliminar la transacción con ID {}", transactionId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Ocurrió un error al eliminar la transacción. Por favor, inténtalo de nuevo más tarde."));
         }
     }
 }
