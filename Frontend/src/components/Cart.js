@@ -1,4 +1,3 @@
-// src/components/Cart.js
 import React, { useContext, useState } from 'react';
 import { CartContext } from '../context/CartContext';
 import Notification from './Notification';
@@ -9,6 +8,7 @@ const Cart = () => {
     const { cart, clearCart } = useContext(CartContext);
     const { t } = useTranslation();
     const [showNotification, setShowNotification] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(''); // Estado para el mensaje de error
 
     const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
@@ -40,16 +40,27 @@ const Cart = () => {
                 // Compra exitosa
                 clearCart();
                 setShowNotification(true);
+                setErrorMessage(''); // Limpiar cualquier mensaje de error previo
 
                 setTimeout(() => {
                     setShowNotification(false);
                 }, 3000);
             } else {
                 // Manejar errores
-                console.error('Compra fallida:', response.statusText);
+                const errorData = await response.json();
+
+                // Verificar si el error es por stock insuficiente
+                if (errorData.error && errorData.error.includes("exceden los disponibles en stock")) {
+                    setErrorMessage("Cantidad de libros seleccionados exceden los disponibles en stock");
+                } else {
+                    setErrorMessage("Cantidad de libros seleccionados exceden los disponibles en stock");
+                }
+
+                console.error('Compra fallida:', errorData.error || response.statusText);
             }
         } catch (error) {
             console.error('Error durante la compra:', error);
+            setErrorMessage("Error en la red. Por favor, inténtalo de nuevo más tarde.");
         }
     };
 
@@ -82,12 +93,19 @@ const Cart = () => {
                 </div>
             )}
 
-            {/* Notificación de compra */}
+            {/* Mostrar notificación de éxito */}
             <Notification
                 message={t('Purchase successful')}
                 show={showNotification}
                 onClose={() => setShowNotification(false)}
             />
+
+            {/* Mostrar mensaje de error si existe */}
+            {errorMessage && (
+                <div className="error-message">
+                    {errorMessage}
+                </div>
+            )}
         </div>
     );
 };

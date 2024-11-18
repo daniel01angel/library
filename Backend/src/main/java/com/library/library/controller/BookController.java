@@ -3,6 +3,7 @@ package com.library.library.controller;
 import com.library.library.model.Book;
 import com.library.library.service.IBookService;
 import com.library.library.service.TransactionLogService;
+import com.library.library.exception.InsufficientStockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,6 +84,11 @@ public class BookController {
             transactionLogService.logTransaction(userId, new ArrayList<>(booksToBuy.keySet()), amount, ipAddress);
 
             return ResponseEntity.ok(Map.of("message", "Compra realizada y transacción registrada exitosamente"));
+        } catch (InsufficientStockException e) {
+            // Manejar la excepción de stock insuficiente
+            logger.warn("Stock insuficiente: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
             logger.error("Error al procesar la compra de libros", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
