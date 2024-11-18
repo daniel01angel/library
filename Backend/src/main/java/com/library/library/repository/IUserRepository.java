@@ -10,6 +10,10 @@ public interface IUserRepository {
     List<User> getUser(int userId, String firstName, String lastName);
     int updateUser(User user);
     int deleteUser(int userId);
-    int createUser(User newUser);
+    int createUserWithGoogle(User newUser);
+    int createUser(User user); // Registro tradicional
     List<User> getUserByGoogleId(String googleId);
+
+    boolean emailExists(String email) throws Exception;
+
 }

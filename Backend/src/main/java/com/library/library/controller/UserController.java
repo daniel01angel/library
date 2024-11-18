@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -72,4 +73,38 @@ public class UserController {
             return new ResponseEntity<>("Error updating user: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, String>> registerUser(@RequestBody User user) {
+        try {
+            // Validaciones
+            if (user.getFirstName() == null || user.getFirstName().trim().isEmpty()) {
+                return new ResponseEntity<>(Map.of("error", "El nombre es obligatorio"), HttpStatus.BAD_REQUEST);
+            }
+            if (user.getLastName() == null || user.getLastName().trim().isEmpty()) {
+                return new ResponseEntity<>(Map.of("error", "El apellido es obligatorio"), HttpStatus.BAD_REQUEST);
+            }
+            if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+                return new ResponseEntity<>(Map.of("error", "El correo electrónico es obligatorio"), HttpStatus.BAD_REQUEST);
+            }
+            if (user.getGender() == null || user.getGender().trim().isEmpty()) {
+                return new ResponseEntity<>(Map.of("error", "El género es obligatorio"), HttpStatus.BAD_REQUEST);
+            }
+            if (user.getProfession() == null || user.getProfession().trim().isEmpty()) {
+                return new ResponseEntity<>(Map.of("error", "La profesión es obligatoria"), HttpStatus.BAD_REQUEST);
+            }
+            if (userService.emailExists(user.getEmail())) {
+                return new ResponseEntity<>(Map.of("error", "El correo electrónico ya está registrado"), HttpStatus.CONFLICT);
+            }
+
+            // Registro del usuario
+            userService.registerUser(user);
+
+            return new ResponseEntity<>(Map.of("message", "Usuario registrado exitosamente"), HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(Map.of("error", "Error al registrar el usuario"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

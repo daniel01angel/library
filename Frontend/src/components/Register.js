@@ -5,46 +5,153 @@ import '../styles/Register.css';
 const Register = () => {
     const [nombre, setNombre] = useState('');
     const [apellido, setApellido] = useState('');
-    const [ciudad, setCiudad] = useState('');
-    const [pais, setPais] = useState('');
     const [edad, setEdad] = useState('');
     const [correo, setCorreo] = useState('');
-    const [isButtonDisabled, setIsButtonDisabled] = useState(false); // El botón empieza habilitado
+    const [genero, setGenero] = useState('');
+    const [profesion, setProfesion] = useState(''); // Nuevo estado para profesión
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
 
-    // Estado para almacenar si el campo fue tocado sin ingresar un valor
     const [touched, setTouched] = useState({
         nombre: false,
         apellido: false,
-        ciudad: false,
-        pais: false,
         edad: false,
         correo: false,
+        genero: false,
+        profesion: false, // Añadido
     });
 
-    // Función para manejar el cambio en los campos y deshabilitar el botón al comenzar a escribir
+    // Estado para almacenar mensajes de error
+    const [errors, setErrors] = useState({
+        nombre: '',
+        apellido: '',
+        edad: '',
+        correo: '',
+        genero: '',
+        profesion: '', // Añadido
+    });
+
+    // Expresión regular para validar el email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Función para validar los campos
+    const validateField = (fieldName, value) => {
+        let error = '';
+        switch (fieldName) {
+            case 'nombre':
+            case 'apellido':
+                if (!value.trim()) {
+                    error = 'Este campo es requerido';
+                }
+                break;
+            case 'edad':
+                if (!value) {
+                    error = 'Este campo es requerido';
+                } else if (isNaN(value) || value <= 0) {
+                    error = 'Ingrese una edad válida';
+                }
+                break;
+            case 'correo':
+                if (!value.trim()) {
+                    error = 'Este campo es requerido';
+                } else if (!emailRegex.test(value)) {
+                    error = 'Ingrese un correo electrónico válido';
+                }
+                break;
+            case 'genero':
+                if (!value) {
+                    error = 'Seleccione un género';
+                }
+                break;
+            case 'profesion':
+                if (!value.trim()) {
+                    error = 'Este campo es requerido';
+                }
+                break;
+            default:
+                break;
+        }
+        setErrors((prevErrors) => ({ ...prevErrors, [fieldName]: error }));
+    };
+
     const handleInputChange = (setter, field, value) => {
         setter(value);
-        setTouched((prev) => ({ ...prev, [field]: true })); // Marcar el campo como tocado
-        if (!isButtonDisabled) {
-            setIsButtonDisabled(true); // Deshabilita el botón al primer cambio en los campos
-        }
+        setTouched((prev) => ({ ...prev, [field]: true }));
+        validateField(field, value);
     };
 
-    // Validar si todos los campos están completos para volver a habilitar el botón
     useEffect(() => {
-        if (nombre && apellido && ciudad && pais && edad && correo) {
-            setIsButtonDisabled(false); // Habilita el botón si todos los campos están completos
-        }
-    }, [nombre, apellido, ciudad, pais, edad, correo]);
+        // Verificar si hay errores
+        const hasErrors = Object.values(errors).some((error) => error !== '');
+        const allFieldsFilled = nombre && apellido && edad && correo && genero && profesion;
 
-    const handleRegister = () => {
-        // Aquí iría la lógica para registrar al usuario
-        console.log('Registrando usuario:', { nombre, apellido, ciudad, pais, edad, correo });
+        if (allFieldsFilled && !hasErrors) {
+            setIsButtonDisabled(false);
+        } else {
+            setIsButtonDisabled(true);
+        }
+    }, [nombre, apellido, edad, correo, genero, profesion, errors]);
+
+    const handleRegister = async () => {
+        console.log('Registrando usuario:', { nombre, apellido, edad, correo, genero, profesion });
+
+        // Crear objeto con los datos del usuario
+        const userData = {
+            firstName: nombre,
+            lastName: apellido,
+            age: parseInt(edad),
+            email: correo,
+            gender: genero,
+            profession: profesion, // Añadido
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/api/users/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                alert(data.message);
+                // Limpiar los campos
+                setNombre('');
+                setApellido('');
+                setEdad('');
+                setCorreo('');
+                setGenero('');
+                setProfesion(''); // Añadido
+                setTouched({
+                    nombre: false,
+                    apellido: false,
+                    edad: false,
+                    correo: false,
+                    genero: false,
+                    profesion: false, // Añadido
+                });
+                setErrors({
+                    nombre: '',
+                    apellido: '',
+                    edad: '',
+                    correo: '',
+                    genero: '',
+                    profesion: '', // Añadido
+                });
+                setIsButtonDisabled(true);
+            } else {
+                const errorData = await response.json();
+                alert('Error al registrar el usuario: ' + errorData.error);
+            }
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+            alert('Error en la solicitud: ' + error.message);
+        }
     };
 
-    // Estilo de borde rojo para campos vacíos y tocados
     const getBorderStyle = (field) => {
-        return touched[field] && !eval(field) ? '1px solid red' : '1px solid #ccc';
+        return touched[field] && errors[field] ? '1px solid red' : '1px solid #ccc';
     };
 
     return (
@@ -61,6 +168,8 @@ const Register = () => {
             justifyContent: 'center'
         }}>
             <h2 style={{ textAlign: 'center', color: '#333', marginBottom: '20px' }}>Registro</h2>
+
+            {/* Campo Nombre */}
             <div className="form-group" style={{ marginBottom: '15px', width: '100%' }}>
                 <label>Nombre</label>
                 <input
@@ -70,7 +179,12 @@ const Register = () => {
                     onBlur={() => setTouched((prev) => ({ ...prev, nombre: true }))}
                     style={{ border: getBorderStyle('nombre'), padding: '10px', width: '100%', borderRadius: '5px' }}
                 />
+                {touched.nombre && errors.nombre && (
+                    <span className="error-message" style={{ color: 'red' }}>{errors.nombre}</span>
+                )}
             </div>
+
+            {/* Campo Apellido */}
             <div className="form-group" style={{ marginBottom: '15px', width: '100%' }}>
                 <label>Apellido</label>
                 <input
@@ -80,27 +194,12 @@ const Register = () => {
                     onBlur={() => setTouched((prev) => ({ ...prev, apellido: true }))}
                     style={{ border: getBorderStyle('apellido'), padding: '10px', width: '100%', borderRadius: '5px' }}
                 />
+                {touched.apellido && errors.apellido && (
+                    <span className="error-message" style={{ color: 'red' }}>{errors.apellido}</span>
+                )}
             </div>
-            <div className="form-group" style={{ marginBottom: '15px', width: '100%' }}>
-                <label>Ciudad</label>
-                <input
-                    type="text"
-                    value={ciudad}
-                    onChange={(e) => handleInputChange(setCiudad, 'ciudad', e.target.value)}
-                    onBlur={() => setTouched((prev) => ({ ...prev, ciudad: true }))}
-                    style={{ border: getBorderStyle('ciudad'), padding: '10px', width: '100%', borderRadius: '5px' }}
-                />
-            </div>
-            <div className="form-group" style={{ marginBottom: '15px', width: '100%' }}>
-                <label>País</label>
-                <input
-                    type="text"
-                    value={pais}
-                    onChange={(e) => handleInputChange(setPais, 'pais', e.target.value)}
-                    onBlur={() => setTouched((prev) => ({ ...prev, pais: true }))}
-                    style={{ border: getBorderStyle('pais'), padding: '10px', width: '100%', borderRadius: '5px' }}
-                />
-            </div>
+
+            {/* Campo Edad */}
             <div className="form-group" style={{ marginBottom: '15px', width: '100%' }}>
                 <label>Edad</label>
                 <input
@@ -110,7 +209,12 @@ const Register = () => {
                     onBlur={() => setTouched((prev) => ({ ...prev, edad: true }))}
                     style={{ border: getBorderStyle('edad'), padding: '10px', width: '100%', borderRadius: '5px' }}
                 />
+                {touched.edad && errors.edad && (
+                    <span className="error-message" style={{ color: 'red' }}>{errors.edad}</span>
+                )}
             </div>
+
+            {/* Campo Correo */}
             <div className="form-group" style={{ marginBottom: '15px', width: '100%' }}>
                 <label>Correo</label>
                 <input
@@ -120,7 +224,47 @@ const Register = () => {
                     onBlur={() => setTouched((prev) => ({ ...prev, correo: true }))}
                     style={{ border: getBorderStyle('correo'), padding: '10px', width: '100%', borderRadius: '5px' }}
                 />
+                {touched.correo && errors.correo && (
+                    <span className="error-message" style={{ color: 'red' }}>{errors.correo}</span>
+                )}
             </div>
+
+            {/* Campo Género */}
+            <div className="form-group" style={{ marginBottom: '15px', width: '100%' }}>
+                <label>Género</label>
+                <select
+                    value={genero}
+                    onChange={(e) => handleInputChange(setGenero, 'genero', e.target.value)}
+                    onBlur={() => setTouched((prev) => ({ ...prev, genero: true }))}
+                    style={{ border: getBorderStyle('genero'), padding: '10px', width: '100%', borderRadius: '5px' }}
+                >
+                    <option value="">Seleccione su género</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Otro">Otro</option>
+                    <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+                </select>
+                {touched.genero && errors.genero && (
+                    <span className="error-message" style={{ color: 'red' }}>{errors.genero}</span>
+                )}
+            </div>
+
+            {/* Campo Profesión */}
+            <div className="form-group" style={{ marginBottom: '15px', width: '100%' }}>
+                <label>Profesión</label>
+                <input
+                    type="text"
+                    value={profesion}
+                    onChange={(e) => handleInputChange(setProfesion, 'profesion', e.target.value)}
+                    onBlur={() => setTouched((prev) => ({ ...prev, profesion: true }))}
+                    style={{ border: getBorderStyle('profesion'), padding: '10px', width: '100%', borderRadius: '5px' }}
+                />
+                {touched.profesion && errors.profesion && (
+                    <span className="error-message" style={{ color: 'red' }}>{errors.profesion}</span>
+                )}
+            </div>
+
+            {/* Botón Registrar */}
             <button
                 onClick={handleRegister}
                 disabled={isButtonDisabled}

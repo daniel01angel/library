@@ -5,6 +5,7 @@ import com.library.library.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -25,11 +26,13 @@ public class UserService implements IUserService {
     @Override
     public void updateUser(User updatedUser) {
         try {
-            User existingUser = iUserRepository.getUser(updatedUser.getUserId(), null, null).stream().findFirst().orElse(null);
+            User existingUser = iUserRepository.getUser(updatedUser.getUserId(), null, null)
+                    .stream().findFirst().orElse(null);
             if (existingUser == null) {
                 throw new RuntimeException("User not found with ID: " + updatedUser.getUserId());
             }
 
+            // Actualizar campos si no son nulos
             if (updatedUser.getFirstName() != null) {
                 existingUser.setFirstName(updatedUser.getFirstName());
             }
@@ -79,22 +82,74 @@ public class UserService implements IUserService {
         }
     }
 
-    // Nuevo método para autenticación con Google
+    // Método para autenticación con Google
+    @Override
     public User findOrRegisterGoogleUser(String googleId, String email, String firstName, String lastName) {
-        // Buscar al usuario por su Google ID
-        List<User> users = iUserRepository.getUserByGoogleId(googleId);
-        if (!users.isEmpty()) {
-            return users.get(0);
+        try {
+            // Buscar al usuario por su Google ID
+            List<User> users = iUserRepository.getUserByGoogleId(googleId);
+            if (!users.isEmpty()) {
+                return users.get(0);
+            }
+
+            // Si el usuario no existe, registrarlo
+            User newUser = new User();
+            newUser.setGoogleId(googleId);
+            newUser.setEmail(email);
+            newUser.setFirstName(firstName);
+            newUser.setLastName(lastName);
+            newUser.setCityId(1); // Valor predeterminado, por ejemplo 1 (Unknown City)
+            newUser.setCountryId(1); // Valor predeterminado, por ejemplo 1 (Unknown Country)
+            newUser.setAvailableBalance(BigDecimal.ZERO);
+            newUser.setMembershipCardNumber(generateMembershipCardNumber());
+
+            iUserRepository.createUserWithGoogle(newUser);
+            return newUser;
+        } catch (Exception e) {
+            throw new RuntimeException("Error registering Google user", e);
+        }
+    }
+
+    // Nuevo método para registro tradicional
+    @Override
+    public void registerUser(User user) throws Exception {
+        // Validaciones
+        if (user.getFirstName() == null || user.getFirstName().trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre es obligatorio");
+        }
+        if (user.getLastName() == null || user.getLastName().trim().isEmpty()) {
+            throw new IllegalArgumentException("El apellido es obligatorio");
+        }
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            throw new IllegalArgumentException("El correo electrónico es obligatorio");
+        }
+        if (emailExists(user.getEmail())) {
+            throw new IllegalArgumentException("El correo electrónico ya está registrado");
         }
 
-        // Si el usuario no existe, registrarlo
-        User newUser = new User();
-        newUser.setGoogleId(googleId);
-        newUser.setEmail(email);
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
-        newUser.setCityId(0); // Un valor predeterminado, por ejemplo 0.
-        iUserRepository.createUser(newUser);
-        return newUser;
+        // Establecer valores predeterminados si es necesario
+        user.setMembershipCardNumber(generateMembershipCardNumber());
+
+        // Crear usuario
+        iUserRepository.createUser(user);
+    }
+
+
+    @Override
+    public boolean emailExists(String email) throws Exception {
+        try {
+            return iUserRepository.emailExists(email);
+        } catch (Exception e) {
+            throw new RuntimeException("Error checking if email exists", e);
+        }
+    }
+
+    // Método para generar el número de tarjeta de membresía
+    private String generateMembershipCardNumber() {
+        String lastNumber = iUserRepository.getLastMembershipCardNumber();
+        int numericPart = Integer.parseInt(lastNumber.replaceAll("\\D+", ""));
+        int newNumber = numericPart + 1;
+        String formattedNumber = String.format("MC%06d", newNumber); // Formatea el número con ceros a la izquierda
+        return formattedNumber;
     }
 }

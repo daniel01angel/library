@@ -15,16 +15,24 @@ public class UserRepository implements IUserRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    // Método para verificar si el email ya existe
+    @Override
+    public boolean emailExists(String email) throws Exception {
+        String SQL = "SELECT COUNT(*) FROM Users WHERE email = ?";
+        Integer count = jdbcTemplate.queryForObject(SQL, new Object[]{email}, Integer.class);
+        return count != null && count > 0;
+    }
 
     @Override
     public String getLastMembershipCardNumber() {
-        String SQL = "SELECT TOP 1 MembershipCardNumber FROM Users ORDER BY MembershipCardNumber DESC";
+        String SQL = "SELECT TOP 1 MembershipCardNumber FROM Users ORDER BY CAST(SUBSTRING(MembershipCardNumber, 3, LEN(MembershipCardNumber) - 2) AS INT) DESC";
         try {
             return jdbcTemplate.queryForObject(SQL, String.class);
         } catch (Exception e) {
-            return "0"; // Si no hay registros, devuelve "0"
+            return "MC000000"; // Número inicial si no existen registros
         }
     }
+
 
     @Override
     public List<User> getUser(int userId, String firstName, String lastName) {
@@ -46,7 +54,17 @@ public class UserRepository implements IUserRepository {
     @Override
     public int updateUser(User user) {
         String SQL = "UPDATE Users SET FirstName = ?, LastName = ?, CityID = ?, CountryID = ?, Age = ?, Gender = ?, Profession = ?, MembershipCardNumber = ?, AvailableBalance = ? WHERE UserID = ?";
-        return jdbcTemplate.update(SQL, user.getFirstName(), user.getLastName(), user.getCityId(), user.getCountryId(), user.getAge(), user.getGender(), user.getProfession(), user.getMembershipCardNumber(), user.getAvailableBalance(), user.getUserId());
+        return jdbcTemplate.update(SQL,
+                user.getFirstName(),
+                user.getLastName(),
+                user.getCityId(),
+                user.getCountryId(),
+                user.getAge(),
+                user.getGender(),
+                user.getProfession(),
+                user.getMembershipCardNumber(),
+                user.getAvailableBalance(),
+                user.getUserId());
     }
 
     @Override
@@ -62,20 +80,38 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public int createUser(User user) {
+    public int createUserWithGoogle(User user) {
         String SQL = "INSERT INTO Users (googleId, email, firstName, lastName, cityId, countryId, age, gender, profession, membershipCardNumber, availableBalance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(SQL,
                 user.getGoogleId(),
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getCityId() != 0 ? user.getCityId() : 1,  // Utilizar un valor de CityID que sea válido, como 1 (Unknown City)
-                user.getCountryId() != 0 ? user.getCountryId() : 1,  // Si no se proporciona, usar 0
-                user.getAge() != 0 ? user.getAge() : 0,  // Si no se proporciona, usar 0
-                user.getGender() != null ? user.getGender() : "",  // Valor predeterminado vacío si es null
-                user.getProfession() != null ? user.getProfession() : "",  // Valor predeterminado vacío si es null
-                user.getMembershipCardNumber() != null ? user.getMembershipCardNumber() : "MC4000",  // Valor predeterminado vacío si es null
-                user.getAvailableBalance() != null ? user.getAvailableBalance() : BigDecimal.ZERO  // Valor predeterminado 0 si es null
+                user.getCityId() != 0 ? user.getCityId() : 1,   // Valor predeterminado si es 0
+                user.getCountryId() != 0 ? user.getCountryId() : 1, // Valor predeterminado si es 0
+                user.getAge() != 0 ? user.getAge() : 0,         // Valor predeterminado si es 0
+                user.getGender() != null ? user.getGender() : "",       // Valor predeterminado si es null
+                user.getProfession() != null ? user.getProfession() : "", // Valor predeterminado si es null
+                user.getMembershipCardNumber(),
+                user.getAvailableBalance() != null ? user.getAvailableBalance() : BigDecimal.ZERO);
+    }
+
+    // Método para crear un usuario mediante registro tradicional
+    @Override
+    public int createUser(User user) {
+        String SQL = "INSERT INTO Users (email, firstName, lastName, cityId, countryId, age, gender, profession, membershipCardNumber, availableBalance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        return jdbcTemplate.update(SQL,
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getCityId() != 0 ? user.getCityId() : 1,
+                user.getCountryId() != 0 ? user.getCountryId() : 1,
+                user.getAge(),
+                user.getGender(),
+                user.getProfession(),
+                user.getMembershipCardNumber(),
+                user.getAvailableBalance() != null ? user.getAvailableBalance() : new BigDecimal("150000.00")
         );
     }
+
 }
