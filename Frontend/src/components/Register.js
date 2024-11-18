@@ -189,6 +189,7 @@ const Register = () => {
                 <label>Nombre</label>
                 <input
                     type="text"
+                    name="nombre" // Añadido el atributo name
                     value={nombre}
                     onChange={(e) => handleInputChange(setNombre, 'nombre', e.target.value)}
                     onBlur={() => setTouched((prev) => ({ ...prev, nombre: true }))}
@@ -204,6 +205,7 @@ const Register = () => {
                 <label>Apellido</label>
                 <input
                     type="text"
+                    name="apellido" // Añadido el atributo name
                     value={apellido}
                     onChange={(e) => handleInputChange(setApellido, 'apellido', e.target.value)}
                     onBlur={() => setTouched((prev) => ({ ...prev, apellido: true }))}
@@ -219,6 +221,7 @@ const Register = () => {
                 <label>Edad</label>
                 <input
                     type="number"
+                    name="edad" // Añadido el atributo name
                     value={edad}
                     onChange={(e) => handleInputChange(setEdad, 'edad', e.target.value)}
                     onBlur={() => setTouched((prev) => ({ ...prev, edad: true }))}
@@ -234,6 +237,7 @@ const Register = () => {
                 <label>Correo</label>
                 <input
                     type="email"
+                    name="correo" // Añadido el atributo name
                     value={correo}
                     onChange={(e) => handleInputChange(setCorreo, 'correo', e.target.value)}
                     onBlur={() => setTouched((prev) => ({ ...prev, correo: true }))}
@@ -248,6 +252,7 @@ const Register = () => {
             <div className="form-group" style={{ marginBottom: '15px', width: '100%' }}>
                 <label>Género</label>
                 <select
+                    name="genero" // Añadido el atributo name
                     value={genero}
                     onChange={(e) => handleInputChange(setGenero, 'genero', e.target.value)}
                     onBlur={() => setTouched((prev) => ({ ...prev, genero: true }))}
@@ -269,6 +274,7 @@ const Register = () => {
                 <label>Profesión</label>
                 <input
                     type="text"
+                    name="profesion" // Añadido el atributo name
                     value={profesion}
                     onChange={(e) => handleInputChange(setProfesion, 'profesion', e.target.value)}
                     onBlur={() => setTouched((prev) => ({ ...prev, profesion: true }))}
