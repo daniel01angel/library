@@ -10,4 +10,5 @@ public interface IUserService {
     User findOrRegisterGoogleUser(String googleId, String email, String firstName, String lastName);
     void registerUser(User user) throws Exception;
     boolean emailExists(String email) throws Exception;
+    User findByEmail(String email) throws Exception;
 }

@@ -10,28 +10,47 @@ const Login = ({ setIsLoggedIn }) => {
   const navigate = useNavigate();
 
   // Manejo del login con email y contraseña
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (email && password) {
-      console.log('Logging in with email:', email);
-      setIsLoggedIn(true);
-      navigate('/');
+      try {
+        // Hacer la petición al backend para validar las credenciales
+        const response = await fetch('http://localhost:8080/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+
+        if (response.ok) {
+          // Si la respuesta es exitosa
+          const data = await response.json();
+          console.log('Login exitoso:', data);
+          setIsLoggedIn(true);
+          navigate('/');
+        } else {
+          // Si no existe el usuario o la contraseña es incorrecta
+          setErrorMessage('El usuario no existe o la contraseña es incorrecta.');
+        }
+      } catch (error) {
+        console.error('Error en el login:', error);
+        setErrorMessage('Error al conectar con el servidor. Inténtelo de nuevo.');
+      }
     } else {
-      setErrorMessage('Please enter both email and password.');
+      setErrorMessage('Por favor, ingrese tanto el correo electrónico como la contraseña.');
     }
   };
 
-  // Registro básico (sin lógica avanzada)
+  // Manejo del registro
   const handleRegister = () => {
-    console.log('Registering with email:', email);
     navigate('/register');
   };
-
 
   // Manejo del login exitoso con Google
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       const token = credentialResponse.credential; // JWT que devuelve Google
-  
+
       // Envía el token al backend
       const response = await fetch('http://localhost:8080/api/auth/google', {
         method: 'POST',
@@ -40,7 +59,7 @@ const Login = ({ setIsLoggedIn }) => {
         },
         body: JSON.stringify({ token }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         console.log('Google login successful:', data);

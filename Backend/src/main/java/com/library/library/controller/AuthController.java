@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collections;
 import java.util.Map;
@@ -19,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/auth")
-public class AuthGoogleController {
+public class AuthController {
 
     @Autowired
     private UserService userService;
@@ -27,7 +28,9 @@ public class AuthGoogleController {
     private static final String CLIENT_ID = "290181437692-sbvs25klnskordo26alc69igj5gg4uc4.apps.googleusercontent.com";
 
     // Añadimos el logger
-    private static final Logger logger = LoggerFactory.getLogger(AuthGoogleController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
+
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @PostMapping("/google")
     public ResponseEntity<?> googleSignIn(@RequestBody Map<String, String> userInfo) {
@@ -65,5 +68,34 @@ public class AuthGoogleController {
                     .body(Map.of("error", "Ocurrió un error en el servidor. Por favor, inténtalo de nuevo más tarde."));
         }
 
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
+        try {
+            String email = credentials.get("email");
+            String password = credentials.get("password");
+
+            // Buscar el usuario por correo electrónico
+            User user = userService.findByEmail(email);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "El usuario no existe."));
+            }
+
+            // Verificar que la contraseña ingresada coincida con la contraseña encriptada almacenada
+            if (!passwordEncoder.matches(password, user.getPassword())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Contraseña incorrecta."));
+            }
+
+            // Login exitoso
+            return ResponseEntity.ok(Map.of("message", "Login exitoso", "user", user));
+
+        } catch (Exception e) {
+            logger.error("Error al procesar el login", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Ocurrió un error en el servidor. Por favor, inténtalo de nuevo más tarde."));
+        }
     }
 }

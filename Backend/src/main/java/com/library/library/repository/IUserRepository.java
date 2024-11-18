@@ -3,6 +3,7 @@ package com.library.library.repository;
 import com.library.library.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IUserRepository {
     String getLastMembershipCardNumber();
@@ -15,5 +16,5 @@ public interface IUserRepository {
     List<User> getUserByGoogleId(String googleId);
 
     boolean emailExists(String email) throws Exception;
-
+    Optional<User> findByEmail(String email);
 }

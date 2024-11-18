@@ -5,6 +5,8 @@ import com.library.library.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import org.slf4j.Logger;
@@ -23,6 +25,9 @@ public class UserController {
 
     // Inicializar el logger
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
     @GetMapping("/all")
     public ResponseEntity<?> getUsers(
@@ -116,6 +121,10 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
                         .body(Map.of("error", "El correo electrónico ya está registrado"));
             }
+
+            // Encriptar la contraseña antes de guardar
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);
 
             // Registro del usuario
             userService.registerUser(user);

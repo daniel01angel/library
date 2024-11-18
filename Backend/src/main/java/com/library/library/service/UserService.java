@@ -144,6 +144,10 @@ public class UserService implements IUserService {
         }
     }
 
+    public User findByEmail(String email) {
+        return iUserRepository.findByEmail(email).orElse(null);
+    }
+
     // Método para generar el número de tarjeta de membresía
     private String generateMembershipCardNumber() {
         String lastNumber = iUserRepository.getLastMembershipCardNumber();

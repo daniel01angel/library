@@ -15,10 +15,7 @@ public class User {
     private String profession;
     private String membershipCardNumber;
     private BigDecimal availableBalance;
-
-    // Nuevos campos añadidos para soporte de autenticación con Google
-    private String email; // Para almacenar el correo electrónico del usuario
+    private String email;
+    private String password;
     private String googleId; // Para almacenar el ID único de Google del usuario
-
-    // Getters y Setters adicionales si es necesario
 }

@@ -12,6 +12,8 @@ const Register = () => {
     const [correo, setCorreo] = useState('');
     const [genero, setGenero] = useState('');
     const [profesion, setProfesion] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
     const navigate = useNavigate();
 
@@ -23,6 +25,8 @@ const Register = () => {
         correo: false,
         genero: false,
         profesion: false,
+        password: false,
+        confirmPassword: false,
     });
 
     const [errors, setErrors] = useState({
@@ -32,6 +36,8 @@ const Register = () => {
         correo: '',
         genero: '',
         profesion: '',
+        password: '',
+        confirmPassword: '',
     });
 
     // Expresión regular para validar el email
@@ -72,6 +78,20 @@ const Register = () => {
                     error = 'Seleccione un género';
                 }
                 break;
+            case 'password':
+                if (!value.trim()) {
+                    error = 'Este campo es requerido';
+                } else if (value.length < 6) {
+                    error = 'La contraseña debe tener al menos 6 caracteres';
+                }
+                break;
+            case 'confirmPassword':
+                if (!value.trim()) {
+                    error = 'Este campo es requerido';
+                } else if (value !== password) {
+                    error = 'Las contraseñas no coinciden';
+                }
+                break;
             default:
                 break;
         }
@@ -87,18 +107,18 @@ const Register = () => {
     useEffect(() => {
         // Verificar si hay errores
         const hasErrors = Object.values(errors).some((error) => error !== '');
-        const allFieldsFilled = nombre && apellido && edad && correo && genero && profesion;
+        const allFieldsFilled = nombre && apellido && edad && correo && genero && profesion && password && confirmPassword;
 
         if (allFieldsFilled && !hasErrors) {
             setIsButtonDisabled(false);
         } else {
             setIsButtonDisabled(true);
         }
-    }, [nombre, apellido, edad, correo, genero, profesion, errors]);
+    }, [nombre, apellido, edad, correo, genero, profesion, password, confirmPassword, errors]);
 
     const handleRegister = async () => {
         console.log('Registrando usuario:', { nombre, apellido, edad, correo, genero, profesion });
-    
+
         // Crear objeto con los datos del usuario
         const userData = {
             firstName: nombre,
@@ -107,8 +127,9 @@ const Register = () => {
             email: correo,
             gender: genero,
             profession: profesion,
+            password: password,
         };
-    
+
         try {
             const response = await fetch('http://localhost:8080/api/users/register', {
                 method: 'POST',
@@ -117,7 +138,7 @@ const Register = () => {
                 },
                 body: JSON.stringify(userData),
             });
-    
+
             if (response.ok) {
                 const data = await response.json();
                 toast.success(data.message, {
@@ -132,6 +153,8 @@ const Register = () => {
                 setCorreo('');
                 setGenero('');
                 setProfesion('');
+                setPassword('');
+                setConfirmPassword('');
                 setTouched({
                     nombre: false,
                     apellido: false,
@@ -139,6 +162,8 @@ const Register = () => {
                     correo: false,
                     genero: false,
                     profesion: false,
+                    password: false,
+                    confirmPassword: false,
                 });
                 setErrors({
                     nombre: '',
@@ -147,6 +172,8 @@ const Register = () => {
                     correo: '',
                     genero: '',
                     profesion: '',
+                    password: '',
+                    confirmPassword: '',
                 });
                 setIsButtonDisabled(true);
             } else {
@@ -163,7 +190,7 @@ const Register = () => {
                 autoClose: 5000,
             });
         }
-    };    
+    };
 
     const getBorderStyle = (field) => {
         return touched[field] && errors[field] ? '1px solid red' : '1px solid #ccc';
@@ -189,7 +216,7 @@ const Register = () => {
                 <label>Nombre</label>
                 <input
                     type="text"
-                    name="nombre" // Añadido el atributo name
+                    name="nombre"
                     value={nombre}
                     onChange={(e) => handleInputChange(setNombre, 'nombre', e.target.value)}
                     onBlur={() => setTouched((prev) => ({ ...prev, nombre: true }))}
@@ -205,7 +232,7 @@ const Register = () => {
                 <label>Apellido</label>
                 <input
                     type="text"
-                    name="apellido" // Añadido el atributo name
+                    name="apellido"
                     value={apellido}
                     onChange={(e) => handleInputChange(setApellido, 'apellido', e.target.value)}
                     onBlur={() => setTouched((prev) => ({ ...prev, apellido: true }))}
@@ -221,7 +248,7 @@ const Register = () => {
                 <label>Edad</label>
                 <input
                     type="number"
-                    name="edad" // Añadido el atributo name
+                    name="edad"
                     value={edad}
                     onChange={(e) => handleInputChange(setEdad, 'edad', e.target.value)}
                     onBlur={() => setTouched((prev) => ({ ...prev, edad: true }))}
@@ -237,7 +264,7 @@ const Register = () => {
                 <label>Correo</label>
                 <input
                     type="email"
-                    name="correo" // Añadido el atributo name
+                    name="correo"
                     value={correo}
                     onChange={(e) => handleInputChange(setCorreo, 'correo', e.target.value)}
                     onBlur={() => setTouched((prev) => ({ ...prev, correo: true }))}
@@ -252,7 +279,7 @@ const Register = () => {
             <div className="form-group" style={{ marginBottom: '15px', width: '100%' }}>
                 <label>Género</label>
                 <select
-                    name="genero" // Añadido el atributo name
+                    name="genero"
                     value={genero}
                     onChange={(e) => handleInputChange(setGenero, 'genero', e.target.value)}
                     onBlur={() => setTouched((prev) => ({ ...prev, genero: true }))}
@@ -274,7 +301,7 @@ const Register = () => {
                 <label>Profesión</label>
                 <input
                     type="text"
-                    name="profesion" // Añadido el atributo name
+                    name="profesion"
                     value={profesion}
                     onChange={(e) => handleInputChange(setProfesion, 'profesion', e.target.value)}
                     onBlur={() => setTouched((prev) => ({ ...prev, profesion: true }))}
@@ -282,6 +309,38 @@ const Register = () => {
                 />
                 {touched.profesion && errors.profesion && (
                     <span className="error-message" style={{ color: 'red' }}>{errors.profesion}</span>
+                )}
+            </div>
+
+            {/* Campo Contraseña */}
+            <div className="form-group" style={{ marginBottom: '15px', width: '100%' }}>
+                <label>Contraseña</label>
+                <input
+                    type="password"
+                    name="password"
+                    value={password}
+                    onChange={(e) => handleInputChange(setPassword, 'password', e.target.value)}
+                    onBlur={() => setTouched((prev) => ({ ...prev, password: true }))}
+                    style={{ border: getBorderStyle('password'), padding: '10px', width: '100%', borderRadius: '5px' }}
+                />
+                {touched.password && errors.password && (
+                    <span className="error-message" style={{ color: 'red' }}>{errors.password}</span>
+                )}
+            </div>
+
+            {/* Campo Confirmar Contraseña */}
+            <div className="form-group" style={{ marginBottom: '15px', width: '100%' }}>
+                <label>Confirmar Contraseña</label>
+                <input
+                    type="password"
+                    name="confirmPassword"
+                    value={confirmPassword}
+                    onChange={(e) => handleInputChange(setConfirmPassword, 'confirmPassword', e.target.value)}
+                    onBlur={() => setTouched((prev) => ({ ...prev, confirmPassword: true }))}
+                    style={{ border: getBorderStyle('confirmPassword'), padding: '10px', width: '100%', borderRadius: '5px' }}
+                />
+                {touched.confirmPassword && errors.confirmPassword && (
+                    <span className="error-message" style={{ color: 'red' }}>{errors.confirmPassword}</span>
                 )}
             </div>
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserRepository implements IUserRepository {
@@ -34,7 +35,6 @@ public class UserRepository implements IUserRepository {
         }
     }
 
-
     @Override
     public List<User> getUser(int userId, String firstName, String lastName) {
         StringBuilder SQL = new StringBuilder("SELECT * FROM Users WHERE 1=1 ");
@@ -58,7 +58,7 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public int updateUser(User user) {
-        String SQL = "UPDATE Users SET FirstName = ?, LastName = ?, CityID = ?, CountryID = ?, Age = ?, Gender = ?, Profession = ?, MembershipCardNumber = ?, AvailableBalance = ? WHERE UserID = ?";
+        String SQL = "UPDATE Users SET FirstName = ?, LastName = ?, CityID = ?, CountryID = ?, Age = ?, Gender = ?, Profession = ?, MembershipCardNumber = ?, AvailableBalance = ?, Password = ? WHERE UserID = ?";
         return jdbcTemplate.update(SQL,
                 user.getFirstName(),
                 user.getLastName(),
@@ -69,6 +69,7 @@ public class UserRepository implements IUserRepository {
                 user.getProfession(),
                 user.getMembershipCardNumber(),
                 user.getAvailableBalance(),
+                user.getPassword(),
                 user.getUserId());
     }
 
@@ -92,19 +93,18 @@ public class UserRepository implements IUserRepository {
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getCityId() != 0 ? user.getCityId() : 1,   // Valor predeterminado si es 0
-                user.getCountryId() != 0 ? user.getCountryId() : 1, // Valor predeterminado si es 0
-                user.getAge() != 0 ? user.getAge() : 0,         // Valor predeterminado si es 0
-                user.getGender() != null ? user.getGender() : "",       // Valor predeterminado si es null
-                user.getProfession() != null ? user.getProfession() : "", // Valor predeterminado si es null
+                user.getCityId() != 0 ? user.getCityId() : 1,
+                user.getCountryId() != 0 ? user.getCountryId() : 1,
+                user.getAge() != 0 ? user.getAge() : 0,
+                user.getGender() != null ? user.getGender() : "",
+                user.getProfession() != null ? user.getProfession() : "",
                 user.getMembershipCardNumber(),
                 user.getAvailableBalance() != null ? user.getAvailableBalance() : BigDecimal.ZERO);
     }
 
-    // Método para crear un usuario mediante registro tradicional
     @Override
     public int createUser(User user) {
-        String SQL = "INSERT INTO Users (email, firstName, lastName, cityId, countryId, age, gender, profession, membershipCardNumber, availableBalance) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String SQL = "INSERT INTO Users (email, firstName, lastName, cityId, countryId, age, gender, profession, membershipCardNumber, availableBalance, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(SQL,
                 user.getEmail(),
                 user.getFirstName(),
@@ -115,8 +115,16 @@ public class UserRepository implements IUserRepository {
                 user.getGender(),
                 user.getProfession(),
                 user.getMembershipCardNumber(),
-                user.getAvailableBalance() != null ? user.getAvailableBalance() : new BigDecimal("150000.00")
+                user.getAvailableBalance() != null ? user.getAvailableBalance() : new BigDecimal("150000.00"),
+                user.getPassword()
         );
     }
 
+    // Implementación del método para buscar por email
+    @Override
+    public Optional<User> findByEmail(String email) {
+        String SQL = "SELECT * FROM Users WHERE email = ?";
+        List<User> users = jdbcTemplate.query(SQL, new Object[]{email}, BeanPropertyRowMapper.newInstance(User.class));
+        return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
+    }
 }
