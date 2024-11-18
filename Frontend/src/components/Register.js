@@ -1,37 +1,44 @@
 // src/components/Register.js
 import React, { useState, useEffect } from 'react';
 import '../styles/Register.css';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+    // Estados para los campos del formulario
     const [nombre, setNombre] = useState('');
     const [apellido, setApellido] = useState('');
     const [edad, setEdad] = useState('');
     const [correo, setCorreo] = useState('');
     const [genero, setGenero] = useState('');
-    const [profesion, setProfesion] = useState(''); // Nuevo estado para profesión
+    const [profesion, setProfesion] = useState('');
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+    const navigate = useNavigate();
 
+    // Estados para el control de errores y campos tocados
     const [touched, setTouched] = useState({
         nombre: false,
         apellido: false,
         edad: false,
         correo: false,
         genero: false,
-        profesion: false, // Añadido
+        profesion: false,
     });
 
-    // Estado para almacenar mensajes de error
     const [errors, setErrors] = useState({
         nombre: '',
         apellido: '',
         edad: '',
         correo: '',
         genero: '',
-        profesion: '', // Añadido
+        profesion: '',
     });
 
     // Expresión regular para validar el email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Expresión regular para validar solo letras (incluyendo acentos y espacios)
+    const soloLetrasRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
 
     // Función para validar los campos
     const validateField = (fieldName, value) => {
@@ -39,8 +46,11 @@ const Register = () => {
         switch (fieldName) {
             case 'nombre':
             case 'apellido':
+            case 'profesion':
                 if (!value.trim()) {
                     error = 'Este campo es requerido';
+                } else if (!soloLetrasRegex.test(value.trim())) {
+                    error = 'Este campo solo puede contener letras y espacios';
                 }
                 break;
             case 'edad':
@@ -60,11 +70,6 @@ const Register = () => {
             case 'genero':
                 if (!value) {
                     error = 'Seleccione un género';
-                }
-                break;
-            case 'profesion':
-                if (!value.trim()) {
-                    error = 'Este campo es requerido';
                 }
                 break;
             default:
@@ -93,7 +98,7 @@ const Register = () => {
 
     const handleRegister = async () => {
         console.log('Registrando usuario:', { nombre, apellido, edad, correo, genero, profesion });
-
+    
         // Crear objeto con los datos del usuario
         const userData = {
             firstName: nombre,
@@ -101,9 +106,9 @@ const Register = () => {
             age: parseInt(edad),
             email: correo,
             gender: genero,
-            profession: profesion, // Añadido
+            profession: profesion,
         };
-
+    
         try {
             const response = await fetch('http://localhost:8080/api/users/register', {
                 method: 'POST',
@@ -112,24 +117,28 @@ const Register = () => {
                 },
                 body: JSON.stringify(userData),
             });
-
+    
             if (response.ok) {
                 const data = await response.json();
-                alert(data.message);
+                toast.success(data.message, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    onClose: () => navigate('/'), // Redirigir al cerrar el toast
+                });
                 // Limpiar los campos
                 setNombre('');
                 setApellido('');
                 setEdad('');
                 setCorreo('');
                 setGenero('');
-                setProfesion(''); // Añadido
+                setProfesion('');
                 setTouched({
                     nombre: false,
                     apellido: false,
                     edad: false,
                     correo: false,
                     genero: false,
-                    profesion: false, // Añadido
+                    profesion: false,
                 });
                 setErrors({
                     nombre: '',
@@ -137,18 +146,24 @@ const Register = () => {
                     edad: '',
                     correo: '',
                     genero: '',
-                    profesion: '', // Añadido
+                    profesion: '',
                 });
                 setIsButtonDisabled(true);
             } else {
                 const errorData = await response.json();
-                alert('Error al registrar el usuario: ' + errorData.error);
+                toast.error('Error al registrar el usuario: ' + errorData.error, {
+                    position: "top-center",
+                    autoClose: 5000,
+                });
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);
-            alert('Error en la solicitud: ' + error.message);
+            toast.error('Error en la solicitud: ' + error.message, {
+                position: "top-center",
+                autoClose: 5000,
+            });
         }
-    };
+    };    
 
     const getBorderStyle = (field) => {
         return touched[field] && errors[field] ? '1px solid red' : '1px solid #ccc';

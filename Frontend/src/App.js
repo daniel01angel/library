@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
@@ -10,6 +11,8 @@ import CartProvider from './context/CartContext'; // Importa el proveedor de con
 import Cart from './components/Cart'; // Asegúrate de que la ruta sea correcta
 import NotFound from './components/NotFound';
 import Breadcrumb from './components/Breadcrumb'; // Importa el Breadcrumb
+import { ToastContainer } from 'react-toastify'; // Importa ToastContainer
+import 'react-toastify/dist/ReactToastify.css'; // Importa los estilos de Toastify
 
 const App = () => {
     const [selectedBook, setSelectedBook] = useState(null);
@@ -28,6 +31,11 @@ const App = () => {
     return (
         <CartProvider> {/* Envuelve toda la aplicación con CartProvider */}
             <Router>
+                {/* Añade el ToastContainer aquí */}
+                <ToastContainer 
+                    position="top-center"
+                    autoClose={5000}
+                />
                 <Header 
                     onSelectBook={handleSelectBook} 
                     onSelectGenre={handleSelectGenre} 
@@ -42,8 +50,8 @@ const App = () => {
                         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
                         <Route path="/register" element={<Register />} /> {/* Nueva ruta para el registro */}
                         <Route path="/cart" element={<Cart />} />
-                        <Route path="*" element={<NotFound />} />
                         <Route path="/genre/:genreId" element={<BookList />} />
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
             </Router>
