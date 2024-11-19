@@ -144,6 +144,7 @@ const Login = ({ setIsLoggedIn }) => {
         </div>
         {/* Botones de Login y Registro */}
         <button 
+          data-testid="login-button"
           onClick={handleLogin} 
           style={{
             width: '100%',
